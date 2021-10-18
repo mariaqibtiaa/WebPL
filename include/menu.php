@@ -1,6 +1,6 @@
 <?php
 //cek session
-if (!empty($_SESSION['admin'])) {
+if (!empty($_SESSION['id_user'])) {
 ?>
 
     <!-- RESPONSIVE MOBILE -->
@@ -8,7 +8,7 @@ if (!empty($_SESSION['admin'])) {
         <div class="nav-wrapper">
             <a href="./" class="brand-logo center hide-on-large-only">PT. DEE</a>
             <ul id="slide-out" class="side-nav" data-simplebar-direction="vertical">
-                <li class="no-padding">
+                <li class="no-padding" style="margin-top: 100px;">
                     <div class="logo-side center">
                         <?php
                         $query = mysqli_query($config, "SELECT * FROM tbl_instansi");
@@ -18,11 +18,6 @@ if (!empty($_SESSION['admin'])) {
                             } else {
                                 echo '<h5 class="nama-side">PT. Dagsap Endura Eatore</h5>';
                             }
-                            if (!empty($data['alamat'])) {
-                                echo '<p class="description-side">' . $data['alamat'] . '</p>';
-                            } else {
-                                echo '<p class="description-side">Jalan Raya Kediri Gg. Kwagean No. 04 Loceret Telp/Fax. (0358) 329806 Nganjuk 64471</p>';
-                            }
                         }
                         ?>
                     </div>
@@ -30,7 +25,7 @@ if (!empty($_SESSION['admin'])) {
                 <li class="no-padding">
                     <ul class=" collapsible collapsible-accordion">
                         <li>
-                            <a class="collapsible-header"><i class="material-icons">account_circle</i><?php echo $_SESSION['nama']; ?></a>
+                            <a class="collapsible-header"><i class="material-icons">account_circle</i> HRD</a>
                             <div class="collapsible-body">
                                 <ul>
                                     <li><a href="?page=sett">Instansi</a></li>
@@ -40,10 +35,10 @@ if (!empty($_SESSION['admin'])) {
                         </li>
                     </ul>
                 </li>
-                <li><a href="./"><i class="material-icons middle">dashboard</i> Beranda</a></li>
-                <li><a href="?page=sk"><i class="material-icons middle">dashboard</i> Surat Keterangan Aktif</a></li>
-                <li><a href="?page=tsm"><i class="material-icons middle">dashboard</i> Surat Masuk</a></li>
-                <li><a href="?page=tsk"><i class="material-icons middle">dashboard</i> Surat Keluar</a></li>
+                <li><a href="./" class="menu-mobile"><i class="material-icons middle">dashboard</i> Beranda</a></li>
+                <li><a href="?page=sk" class="menu-mobile"><i class="material-icons middle">mail_outline</i> Surat Keterangan Aktif</a></li>
+                <li><a href="?page=tsm" class="menu-mobile"><i class="material-icons middle">email</i> Surat Masuk</a></li>
+                <li><a href="?page=tsk" class="menu-mobile"><i class="material-icons middle">drafts</i> Surat Keluar</a></li>
             </ul>
             <!-- AKHIR DARI RESPONSIVE MOBILE-->
 
@@ -58,7 +53,7 @@ if (!empty($_SESSION['admin'])) {
                 <li><a href="?page=sk">Surat Keterangan Aktif</a></li>
                 <li><a href="?page=tsm">Surat Masuk</a></li>
                 <li><a href="?page=tsk">Surat Keluar</a></li>
-                <li class="right" style="margin-right: 10px;"><a class="dropdown-button" href="#!" data-activates="logout"><i class="material-icons">account_circle</i> <?php echo $_SESSION['nama']; ?><i class="material-icons md-18">arrow_drop_down</i></a></li>
+                <li class="right" style="margin-right: 10px;"><a class="dropdown-button" href="#!" data-activates="logout"><i class="material-icons">account_circle</i> HRD<i class="material-icons md-18">arrow_drop_down</i></a></li>
                 <ul id='logout' class='dropdown-content #b71c1c red darken-4'>
                     <li><a href="?page=sett">Instansi</a></li>
                     <li><a href="logout.php"><i class="material-icons">settings_power</i> Logout</a></li>

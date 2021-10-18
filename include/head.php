@@ -1,6 +1,6 @@
 <?php
 //cek session
-if (!empty($_SESSION['admin'])) {
+if (!empty($_SESSION['id_user'])) {
 ?>
     <?php require('include/config.php'); ?>
 
@@ -71,11 +71,8 @@ if (!empty($_SESSION['admin'])) {
                 margin-left: 20px;
             }
 
-            .title {
-                background: #333;
-                border-radius: 3px 3px 0 0;
-                margin: -20px -20px 25px;
-                padding: 20px;
+            .menu-mobile {
+                font-size: 12px;
             }
 
             .logo {

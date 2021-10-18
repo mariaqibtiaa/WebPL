@@ -1,6 +1,6 @@
 <?php
 //cek session
-if (empty($_SESSION['admin'])) {
+if (empty($_SESSION['id_user'])) {
     $_SESSION['err'] = '<center>Anda harus login terlebih dahulu!</center>';
     header("Location: ./");
     die();
@@ -33,10 +33,7 @@ if (empty($_SESSION['admin'])) {
             die();
         } else {
 
-            $query = mysqli_query($config, "SELECT * FROM tbl_surat_keluar WHERE tgl_catat BETWEEN '$dari_tanggal' AND '$sampai_tanggal'");
-
-            $query2 = mysqli_query($config, "SELECT nama FROM tbl_instansi");
-            list($nama) = mysqli_fetch_array($query2);
+            $query = mysqli_query($config, "SELECT * FROM tbl_surat_keluar WHERE tgl_surat BETWEEN '$dari_tanggal' AND '$sampai_tanggal' ORDER by no_sk DESC");
 
             echo '
                     <!-- SHOW DAFTAR AGENDA -->
@@ -203,12 +200,12 @@ if (empty($_SESSION['admin'])) {
                     }
 
                     echo '  <td>' . $no++ . '</td>
-                            <td>' . $row['no_surat'] . '</td>
+                            <td>' . $row['no_sk'] . '</td>
                             <td>' . $d . " " . $nm . " " . $y . '</td>
-                            <td>' . $row['tujuan'] . '</td>
-                            <td>' . $row['isi'] . '</td>
-                            <td>' . $row['kepada'] . '</td>
-                            <td>' . $row['pic'] . '
+                            <td>' . $row['tujuan_sk'] . '</td>
+                            <td>' . $row['isi_sk'] . '</td>
+                            <td>' . $row['kepada_sk'] . '</td>
+                            <td>' . $row['pic_sk'] . '
                             </td>
                                 </tr>
                             </tbody>';

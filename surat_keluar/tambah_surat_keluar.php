@@ -1,6 +1,6 @@
 <?php
 //cek session
-if (empty($_SESSION['admin'])) {
+if (empty($_SESSION['id_user'])) {
     $_SESSION['err'] = '<center>Anda harus login terlebih dahulu!</center>';
     header("Location: ./");
     die();
@@ -10,39 +10,38 @@ if (empty($_SESSION['admin'])) {
 
         //validasi form kosong
         if (
-            $_REQUEST['kepada'] == "" || $_REQUEST['no_surat'] == "" || $_REQUEST['tujuan'] == "" || $_REQUEST['isi'] == ""
-            || $_REQUEST['tgl_surat'] == ""  || $_REQUEST['pic'] == ""
+            $_REQUEST['kepada_sk'] == "" || $_REQUEST['no_sk'] == "" || $_REQUEST['tujuan_sk'] == "" || $_REQUEST['isi_sk'] == ""
+            || $_REQUEST['tgl_surat'] == ""  || $_REQUEST['pic_sk'] == ""
         ) {
             $_SESSION['errEmpty'] = 'ERROR! Semua form wajib diisi';
             echo '<script language="javascript">window.history.back();</script>';
         } else {
 
-            $kepada = $_REQUEST['kepada'];
-            $no_surat = $_REQUEST['no_surat'];
-            $tujuan = $_REQUEST['tujuan'];
-            $isi = $_REQUEST['isi'];
+            $kepada_sk = $_REQUEST['kepada_sk'];
+            $no_sk = $_REQUEST['no_sk'];
+            $tujuan_sk = $_REQUEST['tujuan_sk'];
+            $isi_sk = $_REQUEST['isi_sk'];
             $tgl_surat = $_REQUEST['tgl_surat'];
-            $pic = $_REQUEST['pic'];
-            $id_user = $_SESSION['id_user'];
+            $pic_sk = $_REQUEST['pic_sk'];
 
             //validasi input data
-            if (!preg_match("/^[a-zA-Z0-9.\/ -]*$/", $kepada)) {
-                $_SESSION['kepadak'] = 'Form kepada hanya boleh mengandung karakter huruf, angka, spasi, titik(.), minus(-) dan garis miring(/)';
+            if (!preg_match("/^[a-zA-Z0-9.\/ -]*$/", $kepada_sk)) {
+                $_SESSION['kepada_skk'] = 'Form kepada hanya boleh mengandung karakter huruf, angka, spasi, titik(.), minus(-) dan garis miring(/)';
                 echo '<script language="javascript">window.history.back();</script>';
             } else {
 
-                if (!preg_match("/^[a-zA-Z0-9.\/ -]*$/", $no_surat)) {
-                    $_SESSION['no_suratk'] = 'Form No Surat hanya boleh mengandung karakter huruf, angka, spasi, titik(.), minus(-) dan garis miring(/)';
+                if (!preg_match("/^[a-zA-Z0-9.\/ -]*$/", $no_sk)) {
+                    $_SESSION['no_skk'] = 'Form No Surat hanya boleh mengandung karakter huruf, angka, spasi, titik(.), minus(-) dan garis miring(/)';
                     echo '<script language="javascript">window.history.back();</script>';
                 } else {
 
-                    if (!preg_match("/^[a-zA-Z0-9.,() \/ -]*$/", $tujuan)) {
-                        $_SESSION['tujuan_surat'] = 'Form Tujuan Surat hanya boleh mengandung karakter huruf, angka, spasi, titik(.), koma(,), minus(-), kurung() dan garis miring(/)';
+                    if (!preg_match("/^[a-zA-Z0-9.,() \/ -]*$/", $tujuan_sk)) {
+                        $_SESSION['tujuan_skk'] = 'Form Tujuan Surat hanya boleh mengandung karakter huruf, angka, spasi, titik(.), koma(,), minus(-), kurung() dan garis miring(/)';
                         echo '<script language="javascript">window.history.back();</script>';
                     } else {
 
-                        if (!preg_match("/^[a-zA-Z0-9.,_()%&@\/\r\n -]*$/", $isi)) {
-                            $_SESSION['isik'] = 'Form Isi Ringkas hanya boleh mengandung karakter huruf, angka, spasi, titik(.), koma(,), minus(-), garis miring(/), kurung(), underscore(_), dan(&) persen(%) dan at(@)';
+                        if (!preg_match("/^[a-zA-Z0-9.,_()%&@\/\r\n -]*$/", $isi_sk)) {
+                            $_SESSION['isi_skk'] = 'Form Isi Ringkas hanya boleh mengandung karakter huruf, angka, spasi, titik(.), koma(,), minus(-), garis miring(/), kurung(), underscore(_), dan(&) persen(%) dan at(@)';
                             echo '<script language="javascript">window.history.back();</script>';
                         } else {
 
@@ -51,12 +50,12 @@ if (empty($_SESSION['admin'])) {
                                 echo '<script language="javascript">window.history.back();</script>';
                             } else {
 
-                                if (!preg_match("/^[a-zA-Z0-9.,()\/ -]*$/", $pic)) {
-                                    $_SESSION['pick'] = 'Form pic hanya boleh mengandung karakter huruf, angka, spasi, titik(.), koma(,), minus(-), garis miring(/), dan kurung()';
+                                if (!preg_match("/^[a-zA-Z0-9.,()\/ -]*$/", $pic_sk)) {
+                                    $_SESSION['pic_skk'] = 'Form pic hanya boleh mengandung karakter huruf, angka, spasi, titik(.), koma(,), minus(-), garis miring(/), dan kurung()';
                                     echo '<script language="javascript">window.history.back();</script>';
                                 } else {
 
-                                    $cek = mysqli_query($config, "SELECT * FROM tbl_surat_keluar WHERE no_surat='$no_surat'");
+                                    $cek = mysqli_query($config, "SELECT * FROM tbl_surat_keluar WHERE no_sk='$no_sk'");
                                     $result = mysqli_num_rows($cek);
 
                                     if ($result > 0) {
@@ -81,9 +80,9 @@ if (empty($_SESSION['admin'])) {
 
                                                     move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $nfile);
 
-                                                    $query = mysqli_query($config, "INSERT INTO tbl_surat_keluar(kepada,tujuan,no_surat,isi,tgl_surat,
-                                                                tgl_catat,file,pic,id_user)
-                                                                VALUES('$kepada','$tujuan','$no_surat','$isi','$tgl_surat',NOW(),'$nfile','$pic','$id_user')");
+                                                    $query = mysqli_query($config, "INSERT INTO tbl_surat_keluar(kepada_sk,tujuan_sk,no_sk,isi_sk,tgl_surat,
+                                                                file,pic_sk)
+                                                                VALUES('$kepada_sk','$tujuan_sk','$no_sk','$isi_sk','$tgl_surat','$nfile','$pic_sk')");
 
                                                     if ($query == true) {
                                                         $_SESSION['succAdd'] = 'SUKSES! Data berhasil ditambahkan';
@@ -102,9 +101,9 @@ if (empty($_SESSION['admin'])) {
                                                 echo '<script language="javascript">window.history.back();</script>';
                                             }
                                         } else {
-                                            $query = mysqli_query($config, "INSERT INTO tbl_surat_keluar(kepada,tujuan,no_surat,isi,tgl_surat,
-                                                        tgl_catat,file,pic,id_user)
-                                                        VALUES('$kepada','$tujuan','$no_surat','$isi','$tgl_surat',NOW(),'','$pic','$id_user')");
+                                            $query = mysqli_query($config, "INSERT INTO tbl_surat_keluar(kepada_sk,tujuan_sk,no_sk,isi_sk,tgl_surat,
+                                                        file,pic_sk)
+                                                        VALUES('$kepada_sk','$tujuan_sk','$no_sk','$isi_sk','$tgl_surat','','$pic_sk')");
 
                                             if ($query == true) {
                                                 $_SESSION['succAdd'] = 'SUKSES! Data berhasil ditambahkan';
@@ -180,12 +179,12 @@ if (empty($_SESSION['admin'])) {
                 <div class="row">
                     <div class="input-field col s12">
                         <i class="material-icons prefix md-prefix">looks_two</i>
-                        <input id="no_surat" type="text" class="validate" name="no_surat" required>
+                        <input id="no_sk" type="text" class="validate" name="no_sk" required>
                         <?php
-                        if (isset($_SESSION['no_suratk'])) {
-                            $no_suratk = $_SESSION['no_suratk'];
-                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $no_suratk . '</div>';
-                            unset($_SESSION['no_suratk']);
+                        if (isset($_SESSION['no_skk'])) {
+                            $no_skk = $_SESSION['no_skk'];
+                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $no_skk . '</div>';
+                            unset($_SESSION['no_skk']);
                         }
                         if (isset($_SESSION['errDup'])) {
                             $errDup = $_SESSION['errDup'];
@@ -193,7 +192,7 @@ if (empty($_SESSION['admin'])) {
                             unset($_SESSION['errDup']);
                         }
                         ?>
-                        <label for="no_surat">Nomor Surat</label>
+                        <label for="no_sk">Nomor Surat</label>
                     </div>
                     <div class="input-field col s12">
                         <i class="material-icons prefix md-prefix">date_range</i>
@@ -209,51 +208,51 @@ if (empty($_SESSION['admin'])) {
                     </div>
                     <div class="input-field col s12">
                         <i class="material-icons prefix md-prefix">place</i>
-                        <input id="tujuan" type="text" class="validate" name="tujuan" required>
+                        <input id="tujuan_sk" type="text" class="validate" name="tujuan_sk" required>
                         <?php
-                        if (isset($_SESSION['tujuan_surat'])) {
-                            $tujuan_surat = $_SESSION['tujuan_surat'];
-                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $tujuan_surat . '</div>';
-                            unset($_SESSION['tujuan_surat']);
+                        if (isset($_SESSION['tujuan_skk'])) {
+                            $tujuan_skk = $_SESSION['tujuan_skk'];
+                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $tujuan_skk . '</div>';
+                            unset($_SESSION['tujuan_skk']);
                         }
                         ?>
-                        <label for="tujuan">Tujuan Surat</label>
+                        <label for="tujuan_sk">Tujuan Surat</label>
                     </div>
                     <div class="input-field col s12">
                         <i class="material-icons prefix md-prefix">looks_one</i>
-                        <input id="kepada" type="text" class="validate" name="kepada" required>
+                        <input id="kepada_sk" type="text" class="validate" name="kepada_sk" required>
                         <?php
-                        if (isset($_SESSION['kepadak'])) {
-                            $kepadak = $_SESSION['kepadak'];
-                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $kepadak . '</div>';
-                            unset($_SESSION['kepadak']);
+                        if (isset($_SESSION['kepada_skk'])) {
+                            $kepada_skk = $_SESSION['kepada_skk'];
+                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $kepada_skk . '</div>';
+                            unset($_SESSION['kepada_skk']);
                         }
                         ?>
-                        <label for="kepada">Kepada</label>
+                        <label for="kepada_sk">Kepada</label>
                     </div>
                     <div class="input-field col s12">
                         <i class="material-icons prefix md-prefix">featured_play_list</i>
-                        <input id="pic" type="text" class="validate" name="pic" required>
+                        <input id="pic_sk" type="text" class="validate" name="pic_sk" required>
                         <?php
-                        if (isset($_SESSION['pick'])) {
-                            $pick = $_SESSION['pick'];
-                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $pick . '</div>';
-                            unset($_SESSION['pick']);
+                        if (isset($_SESSION['pic_skk'])) {
+                            $pic_skk = $_SESSION['pic_skk'];
+                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $pic_skk . '</div>';
+                            unset($_SESSION['pic_skk']);
                         }
                         ?>
-                        <label for="pic">pic</label>
+                        <label for="pic_sk">pic</label>
                     </div>
                     <div class="input-field col s12">
                         <i class="material-icons prefix md-prefix">description</i>
-                        <textarea id="isi" class="materialize-textarea validate" name="isi" required></textarea>
+                        <textarea id="isi_sk" class="materialize-textarea validate" name="isi_sk" required></textarea>
                         <?php
-                        if (isset($_SESSION['isik'])) {
-                            $isik = $_SESSION['isik'];
-                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $isik . '</div>';
-                            unset($_SESSION['isik']);
+                        if (isset($_SESSION['isi_skk'])) {
+                            $isi_skk = $_SESSION['isi_skk'];
+                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $isi_skk . '</div>';
+                            unset($_SESSION['isi_skk']);
                         }
                         ?>
-                        <label for="isi">Isi Ringkas</label>
+                        <label for="isi_sk">Isi Ringkas</label>
                     </div>
                     <div class="input-field col s12">
                         <div class="file-field input-field tooltipped" data-position="top" data-tooltip="Jika tidak ada file/scan gambar surat, biarkan kosong">

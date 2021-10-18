@@ -3,7 +3,7 @@ ob_start();
 session_start();
 
 //cek session
-if (isset($_SESSION['admin'])) {
+if (isset($_SESSION['id_user'])) {
     header("Location: ./admin.php");
     die();
 }
@@ -75,18 +75,16 @@ require('include/config.php');
             $username = trim(htmlspecialchars(mysqli_real_escape_string($config, $_REQUEST['username'])));
             $password = trim(htmlspecialchars(mysqli_real_escape_string($config, $_REQUEST['password'])));
 
-            $query = mysqli_query($config, "SELECT id_user, username, nama, admin FROM tbl_user WHERE username=BINARY'$username' AND password=MD5('$password')");
+            $query = mysqli_query($config, "SELECT id_user, username FROM tbl_user WHERE username=BINARY'$username' AND password=MD5('$password')");
 
             if (mysqli_num_rows($query) > 0) {
-                list($id_user, $username, $nama, $admin) = mysqli_fetch_array($query);
+                list($id_user, $username) = mysqli_fetch_array($query);
 
                 session_start();
 
                 //buat session
                 $_SESSION['id_user'] = $id_user;
                 $_SESSION['username'] = $username;
-                $_SESSION['nama'] = $nama;
-                $_SESSION['admin'] = $admin;
 
                 header("Location: ./admin.php");
                 die();
@@ -130,7 +128,7 @@ require('include/config.php');
                 <label for="password">Password</label>
             </div>
             <button type="submit" class="btn btn-lg btn-danger btn-block" name="submit">Sign In</button>
-            <p class="mt-5 mb-3 text-muted text-center">&copy; <?= date('Y') ?> by Maria Qibtia 18.230"</p>
+            <p class="mt-5 mb-3 text-muted text-center">&copy; <?= date('Y') ?> by PT. Dagsap Endura Eatore</p>
         </form>
         <!-- Form END -->
     <?php

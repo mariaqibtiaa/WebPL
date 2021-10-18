@@ -1,6 +1,6 @@
 <?php
 //cek session
-if (empty($_SESSION['admin'])) {
+if (empty($_SESSION['id_user'])) {
     $_SESSION['err'] = '<center>Anda harus login terlebih dahulu!</center>';
     header("Location: ./");
     die();
@@ -33,7 +33,7 @@ if (empty($_SESSION['admin'])) {
             die();
         } else {
 
-            $query = mysqli_query($config, "SELECT * FROM tbl_surat_masuk WHERE tgl_diterima BETWEEN '$dari_tanggal' AND '$sampai_tanggal'");
+            $query = mysqli_query($config, "SELECT * FROM tbl_surat_masuk WHERE tgl_surat BETWEEN '$dari_tanggal' AND '$sampai_tanggal' ORDER BY no_sm ASC");
 
             $query2 = mysqli_query($config, "SELECT nama FROM tbl_instansi");
             list($nama) = mysqli_fetch_array($query2);
@@ -158,10 +158,10 @@ if (empty($_SESSION['admin'])) {
                                 <th width="3%">No</th>
                                 <th width="15%">Nomor Surat</th>
                                 <th width="10%">Tanggal<br/> Surat</th>
-                                <th width="18%">Indeks</th>
+                                <th width="18%">kategori</th>
                                 <th width="30%">Isi Ringkas</th>
-                                <th width="12%">Asal Surat</th>
-                                <th width="12%">Keterangan</th>
+                                <th width="12%">Kepada</th>
+                                <th width="12%">PIC</th>
                             </thead>
 
                             <tbody>
@@ -203,12 +203,12 @@ if (empty($_SESSION['admin'])) {
 
                     echo '
                                         <td>' . $no++ . '</td>
-                                        <td>' . $row['no_surat'] . '</td>
+                                        <td>' . $row['no_sm'] . '</td>
                                         <td>' . $d . " " . $nm . " " . $y . '</td>
-                                        <td>' . $row['indeks'] . '</td>
-                                        <td>' . $row['isi'] . '</td>
-                                        <td>' . $row['asal_surat'] . '</td>
-                                        <td>' . $row['keterangan'] . '</td>
+                                        <td>' . $row['kategori_sm'] . '</td>
+                                        <td>' . $row['isi_sm'] . '</td>
+                                        <td>' . $row['kepada_sm'] . '</td>
+                                        <td>' . $row['pic_sm'] . '</td>
                             </td>
                         </tr>
                     </tbody>';

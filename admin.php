@@ -3,7 +3,7 @@ ob_start();
 //cek session
 session_start();
 
-if (empty($_SESSION['admin'])) {
+if (empty($_SESSION['id_user'])) {
     $_SESSION['err'] = '<center>Anda harus login terlebih dahulu!</center>';
     header("Location: ./");
     die();
@@ -59,12 +59,6 @@ if (empty($_SESSION['admin'])) {
                         case 'ask':
                             include "surat_keluar/agenda_surat_keluar.php";
                             break;
-                        case 'gsm':
-                            include "file_sm.php";
-                            break;
-                        case 'gsk':
-                            include "file_sk.php";
-                            break;
                         case 'sett':
                             include "pengaturan.php";
                             break;
@@ -74,9 +68,7 @@ if (empty($_SESSION['admin'])) {
                     <!-- Row START -->
                     <div class="row">
                         <div class="container">
-                            <h1>Selamat Datang <?php echo $_SESSION['nama']; ?></h1>
-                            <p class="description">Anda login sebagai <strong>Super Admin</strong>. Anda memiliki akses penuh terhadap sistem
-                            </p>
+                            <h1>Selamat Datang</h1>
 
                             <hr class="my-4">
                             <p class="lead">DagsapArchive adalah program yang akan memudahkan anda dalam mengarsip surat masuk dan surat keluar</p>
@@ -85,16 +77,22 @@ if (empty($_SESSION['admin'])) {
                         <!-- Welcome Message END -->
 
                         <?php
+
+
                         //menghitung jumlah surat masuk
                         $count1 = mysqli_num_rows(mysqli_query($config, "SELECT * FROM tbl_surat_masuk"));
 
-                        //menghitung jumlah surat masuk
-                        $count2 = mysqli_num_rows(mysqli_query($config, "SELECT * FROM tbl_surat_keluar"));
+                        //menghitung jumlah surat keluar
+                        $count2 = mysqli_num_rows(mysqli_query($config, "SELECT * FROM tbl_ska"));
+
+                        //menghitung jumlah surat keluar
+                        $count3 = mysqli_num_rows(mysqli_query($config, "SELECT * FROM tbl_surat_keluar"));
+
 
                         ?>
 
                         <!-- Info Statistic START -->
-                        <div class="col s12 m6">
+                        <div class="col s6">
                             <div class="card">
                                 <div class="card-content center">
                                     <span class="card-title black-text"><i class="material-icons md-36">mail</i> Jumlah Surat Masuk</span>
@@ -102,11 +100,19 @@ if (empty($_SESSION['admin'])) {
                                 </div>
                             </div>
                         </div>
-                        <div class="col s12 m6">
+                        <div class="col s6">
+                            <div class="card">
+                                <div class="card-content center">
+                                    <span class="card-title black-text"><i class="material-icons md-36">email</i> Jumlah Surat Keterangan Aktif</span>
+                                    <?php echo '<h5 class="black-text link">' . $count2 . ' Surat Keterangan Aktif</h5>'; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s6 m12">
                             <div class="card">
                                 <div class="card-content center">
                                     <span class="card-title black-text"><i class="material-icons md-36">drafts</i> Jumlah Surat Keluar</span>
-                                    <?php echo '<h5 class="black-text link">' . $count2 . ' Surat Keluar</h5>'; ?>
+                                    <?php echo '<h5 class="black-text link">' . $count3 . ' Surat Keluar</h5>'; ?>
                                 </div>
                             </div>
                         </div>

@@ -6,11 +6,17 @@ if (empty($_SESSION['id_user'])) {
     die();
 } else {
 
+    echo '
+<div id="main">
+    <div class="wrapper">
+        <!-- START CONTENT -->
+        <section id="content"><br /><br />';
+
     if (isset($_REQUEST['submit'])) {
 
         //validasi form kosong
         if (
-            $_REQUEST['kepada_sk'] == "" || $_REQUEST['no_sk'] == "" || $_REQUEST['tujuan_sk'] == "" || $_REQUEST['isi_sk'] == ""
+            $_REQUEST['kepada_sk'] == "" || $_REQUEST['no_sk'] == "" || $_REQUEST['isi_sk'] == ""
             || $_REQUEST['tgl_surat'] == ""  || $_REQUEST['pic_sk'] == ""
         ) {
             $_SESSION['errEmpty'] = 'ERROR! Semua form wajib diisi';
@@ -20,7 +26,6 @@ if (empty($_SESSION['id_user'])) {
             $id_sk = $_REQUEST['id_sk'];
             $kepada_sk = $_REQUEST['kepada_sk'];
             $no_sk = $_REQUEST['no_sk'];
-            $tujuan_sk = $_REQUEST['tujuan_sk'];
             $isi_sk = $_REQUEST['isi_sk'];
             $tgl_surat = $_REQUEST['tgl_surat'];
             $pic_sk = $_REQUEST['pic_sk'];
@@ -36,102 +41,96 @@ if (empty($_SESSION['id_user'])) {
                     echo '<script language="javascript">window.history.back();</script>';
                 } else {
 
-                    if (!preg_match("/^[a-zA-Z0-9.,() \/ -]*$/", $tujuan_sk)) {
-                        $_SESSION['tujuan_skk'] = 'Form Tujuan Surat hanya boleh mengandung karakter huruf, angka, spasi, titik(.), koma(,), minus(-),kurung() dan garis miring(/)';
+                    if (!preg_match("/^[a-zA-Z0-9.,_()%&@\/\r\n -]*$/", $isi_sk)) {
+                        $_SESSION['isi_skk'] = 'Form Isi Ringkas hanya boleh mengandung karakter huruf, angka, spasi, titik(.), koma(,), minus(-), garis miring(/), kurung(), underscore(_), dan(&) persen(%) dan at(@)';
                         echo '<script language="javascript">window.history.back();</script>';
                     } else {
 
-                        if (!preg_match("/^[a-zA-Z0-9.,_()%&@\/\r\n -]*$/", $isi_sk)) {
-                            $_SESSION['isi_skk'] = 'Form Isi Ringkas hanya boleh mengandung karakter huruf, angka, spasi, titik(.), koma(,), minus(-), garis miring(/), kurung(), underscore(_), dan(&) persen(%) dan at(@)';
+                        if (!preg_match("/^[0-9.-]*$/", $tgl_surat)) {
+                            $_SESSION['tgl_suratk'] = 'Form Tanggal Surat hanya boleh mengandung angka dan minus(-)';
                             echo '<script language="javascript">window.history.back();</script>';
                         } else {
 
-                            if (!preg_match("/^[0-9.-]*$/", $tgl_surat)) {
-                                $_SESSION['tgl_suratk'] = 'Form Tanggal Surat hanya boleh mengandung angka dan minus(-)';
+                            if (!preg_match("/^[a-zA-Z0-9.,()\/ -]*$/", $pic_sk)) {
+                                $_SESSION['pic_skk'] = 'Form pic hanya boleh mengandung karakter huruf, angka, spasi, titik(.), koma(,), minus(-), garis miring(/), dan kurung()';
                                 echo '<script language="javascript">window.history.back();</script>';
                             } else {
 
-                                if (!preg_match("/^[a-zA-Z0-9.,()\/ -]*$/", $pic_sk)) {
-                                    $_SESSION['pic_skk'] = 'Form pic hanya boleh mengandung karakter huruf, angka, spasi, titik(.), koma(,), minus(-), garis miring(/), dan kurung()';
-                                    echo '<script language="javascript">window.history.back();</script>';
-                                } else {
+                                $ekstensi = array('jpg', 'png', 'jpeg', 'doc', 'docx', 'pdf');
+                                $file = $_FILES['file']['name'];
+                                $x = explode('.', $file);
+                                $eks = strtolower(end($x));
+                                $ukuran = $_FILES['file']['size'];
+                                $target_dir = "upload/surat_keluar/";
 
-                                    $ekstensi = array('jpg', 'png', 'jpeg', 'doc', 'docx', 'pdf');
-                                    $file = $_FILES['file']['name'];
-                                    $x = explode('.', $file);
-                                    $eks = strtolower(end($x));
-                                    $ukuran = $_FILES['file']['size'];
-                                    $target_dir = "upload/surat_keluar/";
+                                //jika form file tidak kosong akan mengeksekusi script dibawah ini
+                                if ($file != "") {
 
-                                    //jika form file tidak kosong akan mengeksekusi script dibawah ini
-                                    if ($file != "") {
+                                    $rand = rand(1, 10000);
+                                    $nfile = $rand . "-" . $file;
 
-                                        $rand = rand(1, 10000);
-                                        $nfile = $rand . "-" . $file;
+                                    //validasi file
+                                    if (in_array($eks, $ekstensi) == true) {
+                                        if ($ukuran < 2500000) {
 
-                                        //validasi file
-                                        if (in_array($eks, $ekstensi) == true) {
-                                            if ($ukuran < 2500000) {
+                                            $id_sk = $_REQUEST['id_sk'];
+                                            $query = mysqli_query($config, "SELECT file FROM tbl_surat_keluar WHERE id_sk='$id_sk'");
+                                            list($file) = mysqli_fetch_array($query);
 
-                                                $id_sk = $_REQUEST['id_sk'];
-                                                $query = mysqli_query($config, "SELECT file FROM tbl_surat_keluar WHERE id_sk='$id_sk'");
-                                                list($file) = mysqli_fetch_array($query);
+                                            //jika file sudah ada akan mengeksekusi script dibawah ini
+                                            if (!empty($file)) {
+                                                unlink($target_dir . $file);
 
-                                                //jika file sudah ada akan mengeksekusi script dibawah ini
-                                                if (!empty($file)) {
-                                                    unlink($target_dir . $file);
+                                                move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $nfile);
 
-                                                    move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $nfile);
+                                                $query = mysqli_query($config, "UPDATE tbl_surat_keluar SET kepada_sk='$kepada_sk',no_sk='$no_sk',isi_sk='$isi_sk',tgl_surat='$tgl_surat',file='$nfile',pic_sk='$pic_sk' WHERE id_sk='$id_sk'");
 
-                                                    $query = mysqli_query($config, "UPDATE tbl_surat_keluar SET kepada_sk='$kepada_sk',tujuan_sk='$tujuan_sk',no_sk='$no_sk',isi_sk='$isi_sk',tgl_surat='$tgl_surat',file='$nfile',pic_sk='$pic_sk' WHERE id_sk='$id_sk'");
-
-                                                    if ($query == true) {
-                                                        $_SESSION['succEdit'] = 'SUKSES! Data berhasil diupdate';
-                                                        header("Location: ./admin.php?page=tsk");
-                                                        die();
-                                                    } else {
-                                                        $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
-                                                        echo '<script language="javascript">window.history.back();</script>';
-                                                    }
+                                                if ($query == true) {
+                                                    $_SESSION['succEdit'] = 'SUKSES! Data berhasil diupdate';
+                                                    header("Location: ./admin.php?page=tsk");
+                                                    die();
                                                 } else {
-
-                                                    //jika file kosong akan mengeksekusi script dibawah ini
-                                                    move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $nfile);
-
-                                                    $query = mysqli_query($config, "UPDATE tbl_surat_keluar SET kepada_sk='$kepada_sk',tujuan_sk='$tujuan_sk',no_sk='$no_sk',isi_sk='$isi_sk',tgl_surat='$tgl_surat',file='$nfile',pic_sk='$pic_sk' WHERE id_sk='$id_sk'");
-
-                                                    if ($query == true) {
-                                                        $_SESSION['succEdit'] = 'SUKSES! Data berhasil diupdate';
-                                                        header("Location: ./admin.php?page=tsk");
-                                                        die();
-                                                    } else {
-                                                        $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
-                                                        echo '<script language="javascript">window.history.back();</script>';
-                                                    }
+                                                    $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
+                                                    echo '<script language="javascript">window.history.back();</script>';
                                                 }
                                             } else {
-                                                $_SESSION['errSize'] = 'Ukuran file yang diupload terlalu besar!';
-                                                echo '<script language="javascript">window.history.back();</script>';
+
+                                                //jika file kosong akan mengeksekusi script dibawah ini
+                                                move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $nfile);
+
+                                                $query = mysqli_query($config, "UPDATE tbl_surat_keluar SET kepada_sk='$kepada_sk',no_sk='$no_sk',isi_sk='$isi_sk',tgl_surat='$tgl_surat',file='$nfile',pic_sk='$pic_sk' WHERE id_sk='$id_sk'");
+
+                                                if ($query == true) {
+                                                    $_SESSION['succEdit'] = 'SUKSES! Data berhasil diupdate';
+                                                    header("Location: ./admin.php?page=tsk");
+                                                    die();
+                                                } else {
+                                                    $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
+                                                    echo '<script language="javascript">window.history.back();</script>';
+                                                }
                                             }
                                         } else {
-                                            $_SESSION['errFormat'] = 'Format file yang diperbolehkan hanya *.JPG, *.PNG, *.DOC, *.DOCX atau *.PDF!';
+                                            $_SESSION['errSize'] = 'Ukuran file yang diupload terlalu besar!';
                                             echo '<script language="javascript">window.history.back();</script>';
                                         }
                                     } else {
+                                        $_SESSION['errFormat'] = 'Format file yang diperbolehkan hanya *.JPG, *.PNG, *.DOC, *.DOCX atau *.PDF!';
+                                        echo '<script language="javascript">window.history.back();</script>';
+                                    }
+                                } else {
 
-                                        //jika form file kosong akan mengeksekusi script dibawah ini
-                                        $id_sk = $_REQUEST['id_sk'];
+                                    //jika form file kosong akan mengeksekusi script dibawah ini
+                                    $id_sk = $_REQUEST['id_sk'];
 
-                                        $query = mysqli_query($config, "UPDATE tbl_surat_keluar SET kepada_sk='$kepada_sk',tujuan_sk='$tujuan_sk',no_sk='$no_sk',isi_sk='$isi_sk',tgl_surat='$tgl_surat',pic_sk='$pic_sk' WHERE id_sk='$id_sk'");
+                                    $query = mysqli_query($config, "UPDATE tbl_surat_keluar SET kepada_sk='$kepada_sk',no_sk='$no_sk',isi_sk='$isi_sk',tgl_surat='$tgl_surat',pic_sk='$pic_sk' WHERE id_sk='$id_sk'");
 
-                                        if ($query == true) {
-                                            $_SESSION['succEdit'] = 'SUKSES! Data berhasil diupdate';
-                                            header("Location: ./admin.php?page=tsk");
-                                            die();
-                                        } else {
-                                            $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
-                                            echo '<script language="javascript">window.history.back();</script>';
-                                        }
+                                    if ($query == true) {
+                                        $_SESSION['succEdit'] = 'SUKSES! Data berhasil diupdate';
+                                        header("Location: ./admin.php?page=tsk");
+                                        die();
+                                    } else {
+                                        $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
+                                        echo '<script language="javascript">window.history.back();</script>';
                                     }
                                 }
                             }
@@ -143,25 +142,9 @@ if (empty($_SESSION['id_user'])) {
     } else {
 
         $id_sk = mysqli_real_escape_string($config, $_REQUEST['id_sk']);
-        $query = mysqli_query($config, "SELECT id_sk, kepada_sk, tujuan_sk, no_sk, isi_sk, tgl_surat, file, pic_sk FROM tbl_surat_keluar WHERE id_sk='$id_sk'");
-        list($id_sk, $kepada_sk, $tujuan_sk, $no_sk, $isi_sk, $tgl_surat, $file, $pic_sk) = mysqli_fetch_array($query);
+        $query = mysqli_query($config, "SELECT id_sk, kepada_sk, no_sk, isi_sk, tgl_surat, file, pic_sk FROM tbl_surat_keluar WHERE id_sk='$id_sk'");
+        list($id_sk, $kepada_sk, $no_sk, $isi_sk, $tgl_surat, $file, $pic_sk) = mysqli_fetch_array($query);
 ?>
-
-        <!-- Row Start -->
-        <div class="row">
-            <!-- Secondary Nav START -->
-            <div class="col s12">
-                <nav class="secondary-nav">
-                    <div class="nav-wrapper #b71c1c red darken-4">
-                        <ul class="left">
-                            <li class="waves-effect waves-light"><a href="#" class="judul"><i class="material-icons">edit</i> Edit Data Surat Keluar</a></li>
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-            <!-- Secondary Nav END -->
-        </div>
-        <!-- Row END -->
 
         <?php
         if (isset($_SESSION['errQ'])) {
@@ -191,7 +174,11 @@ if (empty($_SESSION['id_user'])) {
             unset($_SESSION['errEmpty']);
         }
         ?>
-
+        <div class="col m7">
+            <ul class="left">
+                <h4 class="header">Edit Data Surat Keluar</h4>
+            </ul>
+        </div>
         <!-- Row form Start -->
         <div class="row jarak-form">
 
@@ -225,18 +212,6 @@ if (empty($_SESSION['id_user'])) {
                         <label for="tgl_surat">Tanggal Surat</label>
                     </div>
                     <div class="input-field col s12">
-                        <i class="material-icons prefix md-prefix">place</i>
-                        <input id="tujuan_sk" type="text" class="validate" name="tujuan_sk" value="<?php echo $tujuan_sk; ?>" required>
-                        <?php
-                        if (isset($_SESSION['tujuan_skk'])) {
-                            $tujuan_skk = $_SESSION['tujuan_skk'];
-                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $tujuan_skk . '</div>';
-                            unset($_SESSION['tujuan_skk']);
-                        }
-                        ?>
-                        <label for="tujuan_sk">Tujuan Surat</label>
-                    </div>
-                    <div class="input-field col s12 tooltipped" data-position="top" data-tooltip="Isi dengan angka">
                         <input type="hidden" name="id_sk" value="<?php echo $id_sk; ?>">
                         <i class="material-icons prefix md-prefix">looks_one</i>
                         <input id="kepada_sk" type="text" class="validate" name="kepada_sk" value="<?php echo $kepada_sk; ?>" required>
@@ -308,13 +283,15 @@ if (empty($_SESSION['id_user'])) {
                         <a href="?page=tsk" class="btn-large deep-orange waves-effect waves-light">BATAL <i class="material-icons">clear</i></a>
                     </div>
                 </div>
-
+                <br />
             </form>
             <!-- Form END -->
 
         </div>
         <!-- Row form END -->
-
+        </section>
+        </div>
+        </div>
 <?php
     }
 }

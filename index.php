@@ -102,9 +102,10 @@ require('include/config.php');
         <!-- Form START -->
         <form class="form-signin" method="POST" action="">
             <div class="text-center mb-4">
-                <img class="mb-4" src="./asset/img/1.png" width="150">
+                <img class="mb-4" src="asset/images/logo/login-logo.png" width="150">
                 <h1 class="h3 mb-3 font-weight-normal">PT. Dagsap Endura Eatore</h1>
-                <p>Silahkan masukkan username dan password anda, sebelum masuk ke dalam sistem pengarsipan surat</p>
+                <h3 class="h3 mb-3 font-weight-normal">Departemen HRD/GA</h3>
+                <p>Silahkan masukkan username dan password<br />sebelum masuk ke dalam sistem pengarsipan surat</p>
             </div>
             <div class="row">
                 <?php

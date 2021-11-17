@@ -38,7 +38,6 @@ if (empty($_SESSION['id_user'])) {
                 $alamat = $_REQUEST['alamat'];
                 $supervisor = $_REQUEST['supervisor'];
                 $website = $_REQUEST['website'];
-                $id_user = $_SESSION['id_user'];
 
                 //validasi input data
                 if (!preg_match("/^[a-zA-Z0-9. -]*$/", $nama)) {
@@ -85,36 +84,54 @@ if (empty($_SESSION['id_user'])) {
 
                                             move_uploaded_file($_FILES['logo']['tmp_name'], $target_dir . $nlogo);
 
-                                            $query = mysqli_query($config, "UPDATE tbl_instansi SET nama='$nama',alamat='$alamat',supervisor='$supervisor',website='$website',logo='$nlogo',id_user='$id_user' WHERE id_instansi='$id_instansi'");
+                                            $query = mysqli_query($config, "UPDATE tbl_instansi SET nama='$nama',alamat='$alamat',supervisor='$supervisor',website='$website',logo='$nlogo' WHERE id_instansi='$id_instansi'");
 
                                             if ($query == true) {
-                                                $_SESSION['succEdit'] = 'SUKSES! Data instansi berhasil diupdate';
-                                                header("Location: ././admin.php?page=sett");
+                                                $succEdit = $_SESSION['succEdit'];
+                                                echo "<script>
+                                                alert('SUKSES, Data Berhasil Di Update!');
+                                                document.location='././admin.php?page=sett';
+                                                    </script>";
                                                 die();
                                             } else {
-                                                $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
-                                                echo '<script language="javascript">window.history.back();</script>';
+                                                $errQ = $_SESSION['errQ'];
+                                                echo "<script>
+                                                alert('ERROR! Ada masalah dengan query');
+                                                document.location='././admin.php?page=sett';
+                                                    </script>";
                                             }
                                         } else {
-                                            $_SESSION['errSize'] = 'Ukuran file yang diupload terlalu besar!<br/><br/>';
-                                            echo '<script language="javascript">window.history.back();</script>';
+                                            $errSize = $_SESSION['errSize'];
+                                            echo "<script>
+                                            alert('Ukuran file yang diupload terlalu besar!');
+                                            document.location='././admin.php?page=sett';
+                                                </script>";
                                         }
                                     } else {
-                                        $_SESSION['errSize'] = 'Format file gambar yang diperbolehkan hanya *.JPG dan *.PNG!<br/><br/>';
-                                        echo '<script language="javascript">window.history.back();</script>';
+                                        $errSize = $_SESSION['errSize'];
+                                        echo "<script>
+                                        alert('Format file gambar yang diperbolehkan hanya *.JPG dan *.PNG!');
+                                        document.location='././admin.php?page=sett';
+                                            </script>";
                                     }
                                 } else {
 
                                     //jika form logo kosong akan mengeksekusi script dibawah ini
-                                    $query = mysqli_query($config, "UPDATE tbl_instansi SET nama='$nama',alamat='$alamat',supervisor='$supervisor',website='$website',id_user='$id_user' WHERE id_instansi='$id_instansi'");
+                                    $query = mysqli_query($config, "UPDATE tbl_instansi SET nama='$nama',alamat='$alamat',supervisor='$supervisor',website='$website' WHERE id_instansi='$id_instansi'");
 
                                     if ($query == true) {
-                                        $_SESSION['succEdit'] = 'SUKSES! Data instansi berhasil diupdate';
-                                        header("Location: ././admin.php?page=sett");
+                                        $succEdit = $_SESSION['succEdit'];
+                                        echo "<script>
+                                        alert('SUKSES, Data Berhasil Di Update!');
+                                        document.location='././admin.php?page=sett';
+                                            </script>";
                                         die();
                                     } else {
-                                        $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
-                                        echo '<script language="javascript">window.history.back();</script>';
+                                        $errQ = $_SESSION['errQ'];
+                                        echo "<script>
+                                        alert('ERROR! Ada masalah dengan query');
+                                        document.location='././admin.php?page=sett';
+                                            </script>";
                                     }
                                 }
                             }
@@ -128,22 +145,6 @@ if (empty($_SESSION['id_user'])) {
             if (mysqli_num_rows($query) > 0) {
                 $no = 1;
                 while ($row = mysqli_fetch_array($query)) { ?>
-
-                    <!-- Row Start -->
-                    <div class="row">
-                        <!-- Secondary Nav START -->
-                        <div class="col s12">
-                            <nav class="secondary-nav">
-                                <div class="nav-wrapper #b71c1c red darken-4">
-                                    <ul class="left">
-                                        <li class="waves-effect waves-light"><a href="?page=sett" class="judul"><i class="material-icons">work</i> Manajemen Instansi</a></li>
-                                    </ul>
-                                </div>
-                            </nav>
-                        </div>
-                        <!-- Secondary Nav END -->
-                    </div>
-                    <!-- Row END -->
 
                     <?php
                     if (isset($_SESSION['errEmpty'])) {
@@ -186,109 +187,118 @@ if (empty($_SESSION['id_user'])) {
                         unset($_SESSION['errQ']);
                     }
                     ?>
+                    <div id="main">
+                        <div class="wrapper">
+                            <!-- START CONTENT -->
+                            <section id="content">
+                                <!--start container-->
+                                <div class="container">
+                                    <!-- Row form Start -->
+                                    <br />
+                                    <div class="row jarak-form">
 
-                    <!-- Row form Start -->
-                    <div class="row jarak-form">
+                                        <!-- Form START -->
+                                        <form class="col s12" method="post" action="?page=sett" enctype="multipart/form-data">
 
-                        <!-- Form START -->
-                        <form class="col s12" method="post" action="?page=sett" enctype="multipart/form-data">
+                                            <!-- Row in form START -->
+                                            <div class="row">
+                                                <div class="input-field col s12">
+                                                    <input type="hidden" value="<?php echo $id_instansi; ?>" name="id_instansi">
+                                                    <i class="material-icons prefix md-prefix">school</i>
+                                                    <input id="nama" type="text" class="validate" name="nama" value="<?php echo $row['nama']; ?>" required>
+                                                    <?php
+                                                    if (isset($_SESSION['namains'])) {
+                                                        $namains = $_SESSION['namains'];
+                                                        echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $namains . '</div>';
+                                                        unset($_SESSION['namains']);
+                                                    }
+                                                    ?>
+                                                    <label for="nama">Nama Instansi</label>
+                                                </div>
+                                                <div class="input-field col s12">
+                                                    <i class="material-icons prefix md-prefix">account_box</i>
+                                                    <input id="supervisor" type="text" class="validate" name="supervisor" value="<?php echo $row['supervisor']; ?>" required>
+                                                    <?php
+                                                    if (isset($_SESSION['supervisor'])) {
+                                                        $supervisor = $_SESSION['supervisor'];
+                                                        echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $supervisor . '</div>';
+                                                        unset($_SESSION['supervisor']);
+                                                    }
+                                                    ?>
+                                                    <label for="supervisor">Nama Supervisor</label>
+                                                </div>
+                                                <div class="input-field col s12">
+                                                    <i class="material-icons prefix md-prefix">place</i>
+                                                    <input id="alamat" type="text" class="validate" name="alamat" value="<?php echo $row['alamat']; ?>" required>
+                                                    <?php
+                                                    if (isset($_SESSION['alamat'])) {
+                                                        $alamat = $_SESSION['alamat'];
+                                                        echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $alamat . '</div>';
+                                                        unset($_SESSION['alamat']);
+                                                    }
+                                                    ?>
+                                                    <label for="alamat">Alamat</label>
+                                                </div>
+                                                <div class="input-field col s12">
+                                                    <i class="material-icons prefix md-prefix">language</i>
+                                                    <input id="website" type="url" class="validate" name="website" value="<?php echo $row['website']; ?>" required>
+                                                    <?php
+                                                    if (isset($_SESSION['website'])) {
+                                                        $website = $_SESSION['website'];
+                                                        echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $website . '</div>';
+                                                        unset($_SESSION['website']);
+                                                    }
+                                                    ?>
+                                                    <label for="website">Website</label>
+                                                </div>
+                                                <div class="input-field col s12 tooltipped" data-position="top" data-tooltip="Jika tidak ada logo, biarkan kosong">
+                                                    <div class="file-field input-field">
+                                                        <div class="btn red darken-1">
+                                                            <span>File</span>
+                                                            <input type="file" id="logo" name="logo">
+                                                        </div>
+                                                        <div class="file-path-wrapper">
+                                                            <input class="file-path validate" type="text" placeholder="Upload Logo instansi">
+                                                        </div>
+                                                        <?php
+                                                        if (isset($_SESSION['errSize'])) {
+                                                            $errSize = $_SESSION['errSize'];
+                                                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $errSize . '</div>';
+                                                            unset($_SESSION['errSize']);
+                                                        }
+                                                        if (isset($_SESSION['errFormat'])) {
+                                                            $errFormat = $_SESSION['errFormat'];
+                                                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $errFormat . '</div>';
+                                                            unset($_SESSION['errFormat']);
+                                                        }
+                                                        ?>
+                                                        <small class="red-text">*Format file yang diperbolehkan hanya *.JPG, *.PNG dan ukuran maksimal file 2 MB. Disarankan gambar berbentuk kotak atau lingkaran!</small>
+                                                    </div>
+                                                </div>
+                                                <div class="input-field col s12 center">
+                                                    <img class="logo" src="upload/<?php echo $row['logo']; ?>" />
+                                                </div>
+                                            </div>
+                                            <!-- Row in form END -->
 
-                            <!-- Row in form START -->
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <input type="hidden" value="<?php echo $id_instansi; ?>" name="id_instansi">
-                                    <i class="material-icons prefix md-prefix">school</i>
-                                    <input id="nama" type="text" class="validate" name="nama" value="<?php echo $row['nama']; ?>" required>
-                                    <?php
-                                    if (isset($_SESSION['namains'])) {
-                                        $namains = $_SESSION['namains'];
-                                        echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $namains . '</div>';
-                                        unset($_SESSION['namains']);
-                                    }
-                                    ?>
-                                    <label for="nama">Nama Instansi</label>
-                                </div>
-                                <div class="input-field col s12">
-                                    <i class="material-icons prefix md-prefix">account_box</i>
-                                    <input id="supervisor" type="text" class="validate" name="supervisor" value="<?php echo $row['supervisor']; ?>" required>
-                                    <?php
-                                    if (isset($_SESSION['supervisor'])) {
-                                        $supervisor = $_SESSION['supervisor'];
-                                        echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $supervisor . '</div>';
-                                        unset($_SESSION['supervisor']);
-                                    }
-                                    ?>
-                                    <label for="supervisor">Nama Supervisor</label>
-                                </div>
-                                <div class="input-field col s12">
-                                    <i class="material-icons prefix md-prefix">place</i>
-                                    <input id="alamat" type="text" class="validate" name="alamat" value="<?php echo $row['alamat']; ?>" required>
-                                    <?php
-                                    if (isset($_SESSION['alamat'])) {
-                                        $alamat = $_SESSION['alamat'];
-                                        echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $alamat . '</div>';
-                                        unset($_SESSION['alamat']);
-                                    }
-                                    ?>
-                                    <label for="alamat">Alamat</label>
-                                </div>
-                                <div class="input-field col s12">
-                                    <i class="material-icons prefix md-prefix">language</i>
-                                    <input id="website" type="url" class="validate" name="website" value="<?php echo $row['website']; ?>" required>
-                                    <?php
-                                    if (isset($_SESSION['website'])) {
-                                        $website = $_SESSION['website'];
-                                        echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $website . '</div>';
-                                        unset($_SESSION['website']);
-                                    }
-                                    ?>
-                                    <label for="website">Website</label>
-                                </div>
-                                <div class="input-field col s12 tooltipped" data-position="top" data-tooltip="Jika tidak ada logo, biarkan kosong">
-                                    <div class="file-field input-field">
-                                        <div class="btn red darken-1">
-                                            <span>File</span>
-                                            <input type="file" id="logo" name="logo">
-                                        </div>
-                                        <div class="file-path-wrapper">
-                                            <input class="file-path validate" type="text" placeholder="Upload Logo instansi">
-                                        </div>
-                                        <?php
-                                        if (isset($_SESSION['errSize'])) {
-                                            $errSize = $_SESSION['errSize'];
-                                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $errSize . '</div>';
-                                            unset($_SESSION['errSize']);
-                                        }
-                                        if (isset($_SESSION['errFormat'])) {
-                                            $errFormat = $_SESSION['errFormat'];
-                                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $errFormat . '</div>';
-                                            unset($_SESSION['errFormat']);
-                                        }
-                                        ?>
-                                        <small class="red-text">*Format file yang diperbolehkan hanya *.JPG, *.PNG dan ukuran maksimal file 2 MB. Disarankan gambar berbentuk kotak atau lingkaran!</small>
+                                            <div class="row">
+                                                <div class="col 6">
+                                                    <button type="submit" name="submit" class="btn-large blue waves-effect waves-light">SIMPAN <i class="material-icons">done</i></button>
+                                                </div>
+                                                <div class="col 6">
+                                                    <a href="./admin.php" class="btn-large deep-orange waves-effect waves-light">BATAL <i class="material-icons">clear</i></a>
+                                                </div>
+                                            </div>
+                                            <br />
+                                        </form>
+                                        <!-- Form END -->
+
                                     </div>
+                                    <!-- Row form END -->
                                 </div>
-                                <div class="input-field col s12 center">
-                                    <img class="logo" src="upload/<?php echo $row['logo']; ?>" />
-                                </div>
-                            </div>
-                            <!-- Row in form END -->
-
-                            <div class="row">
-                                <div class="col 6">
-                                    <button type="submit" name="submit" class="btn-large blue waves-effect waves-light">SIMPAN <i class="material-icons">done</i></button>
-                                </div>
-                                <div class="col 6">
-                                    <a href="./admin.php" class="btn-large deep-orange waves-effect waves-light">BATAL <i class="material-icons">clear</i></a>
-                                </div>
-                            </div>
-
-                        </form>
-                        <!-- Form END -->
-
+                            </section>
+                        </div>
                     </div>
-                    <!-- Row form END -->
-
 <?php
                 }
             }

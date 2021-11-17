@@ -6,6 +6,12 @@ if (empty($_SESSION['id_user'])) {
     die();
 } else {
 
+    echo '
+        <div id="main">
+            <div class="wrapper">
+                <section id="content"><br/>
+                    <div class="container">';
+
     if (isset($_SESSION['errQ'])) {
         $errQ = $_SESSION['errQ'];
         echo '<div id="alert-message" class="row jarak-card">
@@ -28,7 +34,6 @@ if (empty($_SESSION['id_user'])) {
         while ($row = mysqli_fetch_array($query)) {
 
             echo '
-                <!-- Row form Start -->
 				<div class="row jarak-card">
 				    <div class="col m12">
                     <div class="card">
@@ -64,6 +69,11 @@ if (empty($_SESSION['id_user'])) {
                                     <td width="1%">:</td>
                                     <td width="86%">' . $row['dept_ska'] . '</td>
     			                </tr>
+                                <tr>
+                                <td width="13%">Tanggal Buat Surat</td>
+                                <td width="1%">:</td>
+                                <td width="86%">' . $tgl = date('d M Y ', strtotime($row['tgl_buat'])) . '</td>
+                            </tr>
     			            </tbody>
     			   		</table>
                         </div>
@@ -74,6 +84,11 @@ if (empty($_SESSION['id_user'])) {
     	            </div>
                 </div>
             </div>
+            </div>
+            <br/>
+            </section>
+            </div>
+            </div>
             <!-- Row form END -->';
 
             if (isset($_REQUEST['submit'])) {
@@ -81,14 +96,12 @@ if (empty($_SESSION['id_user'])) {
                 $query = mysqli_query($config, "DELETE FROM tbl_ska WHERE id_ska='$id_ska'");
 
                 if ($query == true) {
-                    $_SESSION['succDel'] = 'SUKSES! Data berhasil dihapus<br/>';
+                    $_SESSION['succDel'] = 'SUKSES! Data berhasil dihapus';
                     header("Location: ./admin.php?page=sk");
                     die();
                 } else {
                     $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
-                    echo '<script language="javascript">
-                                    window.location.href="./admin.php?page=sk&act=del&id_ska=' . $id_ska . '";
-                                  </script>';
+                    echo '<script language="javascript">window.history.back();</script>';
                 }
             }
         }

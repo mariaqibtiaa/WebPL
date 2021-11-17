@@ -6,27 +6,35 @@ if (empty($_SESSION['id_user'])) {
     die();
 } else {
 
+    echo '
+<div id="main">
+    <div class="wrapper">
+        <!-- START CONTENT -->
+        <section id="content">
+            <!--start container-->
+            <div class="container"><br />';
+
     if (isset($_REQUEST['submit'])) {
 
         //validasi form kosong
         if (
-            $_REQUEST['kepada_sm'] == "" || $_REQUEST['no_sm'] == "" || $_REQUEST['isi_sm'] == ""
-            || $_REQUEST['kategori_sm'] == "" || $_REQUEST['tgl_surat'] == ""  || $_REQUEST['pic_sm'] == ""
+            $_REQUEST['asal_sm'] == "" || $_REQUEST['no_sm'] == "" || $_REQUEST['isi_sm'] == ""
+            || $_REQUEST['perihal_sm'] == "" || $_REQUEST['tgl_surat'] == ""  || $_REQUEST['pic_sm'] == ""
         ) {
             $_SESSION['errEmpty'] = 'ERROR! Semua form wajib diisi';
             echo '<script language="javascript">window.history.back();</script>';
         } else {
 
-            $kepada_sm = $_REQUEST['kepada_sm'];
+            $asal_sm = $_REQUEST['asal_sm'];
             $no_sm = $_REQUEST['no_sm'];
             $isi_sm = $_REQUEST['isi_sm'];
-            $kategori_sm = $_REQUEST['kategori_sm'];
+            $perihal_sm = $_REQUEST['perihal_sm'];
             $tgl_surat = $_REQUEST['tgl_surat'];
             $pic_sm = $_REQUEST['pic_sm'];
 
             //validasi input data
-            if (!preg_match("/^[a-zA-Z0-9.\/ -]*$/", $kepada_sm)) {
-                $_SESSION['ekepada_sm'] = 'Form kepada hanya boleh mengandung karakter huruf, angka, spasi, titik(.), minus(-) dan garis miring(/)';
+            if (!preg_match("/^[a-zA-Z0-9.\/ -]*$/", $asal_sm)) {
+                $_SESSION['easal_sm'] = 'Form asal hanya boleh mengandung karakter huruf, angka, spasi, titik(.), minus(-) dan garis miring(/)';
                 echo '<script language="javascript">window.history.back();</script>';
             } else {
 
@@ -40,8 +48,8 @@ if (empty($_SESSION['id_user'])) {
                         echo '<script language="javascript">window.history.back();</script>';
                     } else {
 
-                        if (!preg_match("/^[a-zA-Z0-9., -]*$/", $kategori_sm)) {
-                            $_SESSION['ekategori_sm'] = 'Form kategori hanya boleh mengandung karakter huruf, angka, spasi, titik(.) dan koma(,) dan minus (-)';
+                        if (!preg_match("/^[a-zA-Z0-9., -]*$/", $perihal_sm)) {
+                            $_SESSION['eperihal_sm'] = 'Form perihal hanya boleh mengandung karakter huruf, angka, spasi, titik(.) dan koma(,) dan minus (-)';
                             echo '<script language="javascript">window.history.back();</script>';
                         } else {
 
@@ -82,7 +90,7 @@ if (empty($_SESSION['id_user'])) {
 
                                                     move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $nfile);
 
-                                                    $query = mysqli_query($config, "UPDATE tbl_surat_masuk SET no_sm='$no_sm',kategori_sm='$kategori_sm',kepada_sm='$kepada_sm',isi_sm='$isi_sm',tgl_surat='$tgl_surat',pic_sm='$pic_sm',file='$nfile' WHERE id_sm='$id_sm'");
+                                                    $query = mysqli_query($config, "UPDATE tbl_surat_masuk SET no_sm='$no_sm',perihal_sm='$perihal_sm',asal_sm='$asal_sm',isi_sm='$isi_sm',tgl_surat='$tgl_surat',pic_sm='$pic_sm',file='$nfile' WHERE id_sm='$id_sm'");
 
                                                     if ($query == true) {
                                                         $_SESSION['succEdit'] = 'SUKSES! Data berhasil diupdate';
@@ -97,7 +105,7 @@ if (empty($_SESSION['id_user'])) {
                                                     //jika file kosong akan mengeksekusi script dibawah ini
                                                     move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $nfile);
 
-                                                    $query = mysqli_query($config, "UPDATE tbl_surat_masuk SET kepada_sm='$kepada_sm',no_sm='$no_sm',isi_sm='$isi_sm',kategori_sm='$kategori_sm',tgl_surat='$tgl_surat',file='$nfile',pic_sm='$pic_sm', WHERE id_sm='$id_sm'");
+                                                    $query = mysqli_query($config, "UPDATE tbl_surat_masuk SET asal_sm='$asal_sm',no_sm='$no_sm',isi_sm='$isi_sm',perihal_sm='$perihal_sm',tgl_surat='$tgl_surat',file='$nfile',pic_sm='$pic_sm', WHERE id_sm='$id_sm'");
 
                                                     if ($query == true) {
                                                         $_SESSION['succEdit'] = 'SUKSES! Data berhasil diupdate';
@@ -121,7 +129,7 @@ if (empty($_SESSION['id_user'])) {
                                         //jika form file kosong akan mengeksekusi script dibawah ini
                                         $id_sm = $_REQUEST['id_sm'];
 
-                                        $query = mysqli_query($config, "UPDATE tbl_surat_masuk SET kepada_sm='$kepada_sm',no_sm='$no_sm',isi_sm='$isi_sm',kategori_sm='$kategori_sm',tgl_surat='$tgl_surat',pic_sm='$pic_sm' WHERE id_sm='$id_sm'");
+                                        $query = mysqli_query($config, "UPDATE tbl_surat_masuk SET asal_sm='$asal_sm',no_sm='$no_sm',isi_sm='$isi_sm',perihal_sm='$perihal_sm',tgl_surat='$tgl_surat',pic_sm='$pic_sm' WHERE id_sm='$id_sm'");
 
                                         if ($query == true) {
                                             $_SESSION['succEdit'] = 'SUKSES! Data berhasil diupdate';
@@ -142,28 +150,9 @@ if (empty($_SESSION['id_user'])) {
     } else {
 
         $id_sm = mysqli_real_escape_string($config, $_REQUEST['id_sm']);
-        $query = mysqli_query($config, "SELECT id_sm, kepada_sm, no_sm, isi_sm, kategori_sm, tgl_surat, file, pic_sm FROM tbl_surat_masuk WHERE id_sm='$id_sm'");
-        list($id_sm, $kepada_sm, $no_sm, $isi_sm, $kategori_sm, $tgl_surat, $file, $pic_sm) = mysqli_fetch_array($query);
+        $query = mysqli_query($config, "SELECT id_sm, asal_sm, no_sm, isi_sm, perihal_sm, tgl_surat, file, pic_sm FROM tbl_surat_masuk WHERE id_sm='$id_sm'");
+        list($id_sm, $asal_sm, $no_sm, $isi_sm, $perihal_sm, $tgl_surat, $file, $pic_sm) = mysqli_fetch_array($query);
 
-?>
-
-        <!-- Row Start -->
-        <div class="row">
-            <!-- Secondary Nav START -->
-            <div class="col s12">
-                <nav class="secondary-nav">
-                    <div class="nav-wrapper #b71c1c red darken-4">
-                        <ul class="left">
-                            <li class="waves-effect waves-light"><a href="#" class="judul"><i class="material-icons">edit</i> Edit Data Surat Masuk</a></li>
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-            <!-- Secondary Nav END -->
-        </div>
-        <!-- Row END -->
-
-        <?php
         if (isset($_SESSION['errQ'])) {
             $errQ = $_SESSION['errQ'];
             echo '<div id="alert-message" class="row">
@@ -190,8 +179,12 @@ if (empty($_SESSION['id_user'])) {
                         </div>';
             unset($_SESSION['errEmpty']);
         }
-        ?>
-
+?>
+        <div class="col m7">
+            <ul class="left">
+                <h4 class="header">Edit Data Surat Masuk</h4>
+            </ul>
+        </div>
         <!-- Row form Start -->
         <div class="row jarak-form">
 
@@ -203,27 +196,27 @@ if (empty($_SESSION['id_user'])) {
                     <div class="input-field col s12">
                         <input type="hidden" name="id_sm" value="<?php echo $id_sm; ?>">
                         <i class="material-icons prefix md-prefix">looks_one</i>
-                        <input id="kepada_sm" type="text" class="validate" value="<?php echo $kepada_sm; ?>" name="kepada_sm" required>
+                        <input id="asal_sm" type="text" class="validate" value="<?php echo $asal_sm; ?>" name="asal_sm" required>
                         <?php
-                        if (isset($_SESSION['ekepada_sm'])) {
-                            $ekepada_sm = $_SESSION['ekepada_sm'];
-                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $ekepada_sm . '</div>';
-                            unset($_SESSION['ekepada_sm']);
+                        if (isset($_SESSION['easal_sm'])) {
+                            $easal_sm = $_SESSION['easal_sm'];
+                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $easal_sm . '</div>';
+                            unset($_SESSION['easal_sm']);
                         }
                         ?>
-                        <label for="kepada_sm">kepada</label>
+                        <label for="asal_sm">asal</label>
                     </div>
                     <div class="input-field col s12">
                         <i class="material-icons prefix md-prefix">storage</i>
-                        <input id="kategori_sm" type="text" class="validate" name="kategori_sm" value="<?php echo $kategori_sm; ?>" required>
+                        <input id="perihal_sm" type="text" class="validate" name="perihal_sm" value="<?php echo $perihal_sm; ?>" required>
                         <?php
-                        if (isset($_SESSION['ekategori_sm'])) {
-                            $ekategori_sm = $_SESSION['ekategori_sm'];
-                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $ekategori_sm . '</div>';
-                            unset($_SESSION['ekategori_sm']);
+                        if (isset($_SESSION['eperihal_sm'])) {
+                            $eperihal_sm = $_SESSION['eperihal_sm'];
+                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $eperihal_sm . '</div>';
+                            unset($_SESSION['eperihal_sm']);
                         }
                         ?>
-                        <label for="kategori_sm">kategori Berkas</label>
+                        <label for="perihal_sm">perihal surat</label>
                     </div>
                     <div class="input-field col s12">
                         <i class="material-icons prefix md-prefix">looks_two</i>
@@ -295,6 +288,7 @@ if (empty($_SESSION['id_user'])) {
                                 ?>
                                 <small class="red-text">*Format file yang diperbolehkan *.JPG, *.PNG, *.DOC, *.DOCX, *.PDF dan ukuran maksimal file 2 MB!</small>
                             </div>
+                            <br />
                         </div>
                     </div>
                 </div>
@@ -308,13 +302,16 @@ if (empty($_SESSION['id_user'])) {
                         <a href="?page=tsm" class="btn-large deep-orange waves-effect waves-light">BATAL <i class="material-icons">clear</i></a>
                     </div>
                 </div>
-
+                <br />
             </form>
             <!-- Form END -->
 
         </div>
         <!-- Row form END -->
-
+        </div>
+        </section>
+        </div>
+        </div>
 <?php
     }
 }

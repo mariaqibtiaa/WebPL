@@ -20,37 +20,11 @@ if (empty($_SESSION['id_user'])) {
                 break;
         }
     } else {
-
-        echo '<!-- Row Start -->
-                <div class="row">
-                    <!-- Secondary Nav START -->
-                    <div class="col s12">
-                        <div class="z-depth-1">
-                            <nav class="secondary-nav">
-                                <div class="nav-wrapper #b71c1c red darken-4">
-                                    <div class="col m7">
-                                        <ul class="left">
-                                            <li class="waves-effect waves-light hide-on-small-only"><a href="?page=sk" class="judul"><i class="material-icons">class</i> Surat Keterangan Aktif</a></li>
-                                            <li class="waves-effect waves-light"><a href="?page=sk&act=add"><i class="material-icons md-24">add_circle</i> Tambah Data</a></li>';
         echo '
-                                        </ul>
-                                    </div>
-                                    <div class="col m5 hide-on-med-and-down">
-                                        <form method="post" action="?page=sk">
-                                            <div class="input-field round-in-box">
-                                                <input id="search" type="search" name="cari" required>
-                                                <label for="search"><i class="material-icons">search</i></label>
-                                                <input type="submit" name="submit" class="hidden">
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </nav>
-                        </div>
-                    </div>
-                    <!-- Secondary Nav END -->
-                </div>
-                <!-- Row END -->';
+        <div id="main">
+        <div class="wrapper">
+            <section id="content">
+                <div class="container">';
 
         if (isset($_SESSION['succAdd'])) {
             $succAdd = $_SESSION['succAdd'];
@@ -112,6 +86,7 @@ if (empty($_SESSION['id_user'])) {
         if (isset($_REQUEST['submit'])) {
             $cari = mysqli_real_escape_string($config, $_REQUEST['cari']);
             echo '
+                        <div class="section"><br/>
                     <div class="col s12" style="margin-top: -18px;">
                         <div class="card blue lighten-5">
                             <div class="card-content">
@@ -124,12 +99,13 @@ if (empty($_SESSION['id_user'])) {
                         <table class="bordered" id="tbl">
                             <thead class="blue lighten-4" id="head">
                                 <tr>
-                                    <th width="4%">No</th>
-                                    <th width="20%">Nomor Surat<br/>Tanggal Masuk</th>
-                                    <th width="19%">Nama</th>
-                                    <th width="19%">NIP</th>
-                                    <th width="14%">Departemen</th>
-                                    <th width="24%">Tindakan</th>
+                                <th width="4%">No</th>
+                                <th width="16%">Nomor Surat<br/>Tanggal Masuk</th>
+                                <th width="24%">Nama</th>
+                                <th width="17%">NIP</th>
+                                <th width="12%">Departemen</th>
+                                <th width="12%">Tanggal Buat Surat</th>
+                                <th width="15%">Tindakan</th>
                                 </tr>
                             </thead>
 
@@ -139,50 +115,18 @@ if (empty($_SESSION['id_user'])) {
             //script untuk menampilkan data
             $query = mysqli_query($config, "SELECT * FROM tbl_ska WHERE nama_ska LIKE '%$cari%' ORDER BY no_ska DESC");
             if (mysqli_num_rows($query) > 0) {
+                $no = 1;
                 while ($row = mysqli_fetch_array($query)) {
-                    $no = 1;
-                    $y = substr($row['tgl_masuk'], 0, 4);
-                    $m = substr($row['tgl_masuk'], 5, 2);
-                    $d = substr($row['tgl_masuk'], 8, 2);
-
-                    if ($m == "01") {
-                        $nm = "Januari";
-                    } elseif ($m == "02") {
-                        $nm = "Februari";
-                    } elseif ($m == "03") {
-                        $nm = "Maret";
-                    } elseif ($m == "04") {
-                        $nm = "April";
-                    } elseif ($m == "05") {
-                        $nm = "Mei";
-                    } elseif ($m == "06") {
-                        $nm = "Juni";
-                    } elseif ($m == "07") {
-                        $nm = "Juli";
-                    } elseif ($m == "08") {
-                        $nm = "Agustus";
-                    } elseif ($m == "09") {
-                        $nm = "September";
-                    } elseif ($m == "10") {
-                        $nm = "Oktober";
-                    } elseif ($m == "11") {
-                        $nm = "November";
-                    } elseif ($m == "12") {
-                        $nm = "Desember";
-                    }
-
                     echo '              <td>' . $no++ . '</td>
-                                        <td>' . $row['no_ska'] . '<br/><hr/>' . $d . " " . $nm . " " . $y . '</td>
+                                        <td>' . $row['no_ska'] . '<br/><hr/>' . $tgl = date('d M Y ', strtotime($row['tgl_masuk'])) . '</td>
                                         <td>' . $row['nama_ska'] . '</td>
                                         <td>' . $row['nip_ska'] . '</td>
                                         <td>' . $row['dept_ska'] . '</td>
+                                        <td>' . $tgl = date('d M Y ', strtotime($row['tgl_buat'])) . '</td>
                                         <td>
-                                            <a class="btn small blue waves-effect waves-light" href="?page=sk&act=edit&id_ska=' . $row['id_ska'] . '">
-                                                <i class="material-icons">edit</i> EDIT</a>
-                                            <a class="btn small yellow darken-3 waves-effect waves-light" href="?page=ctk&id_ska=' . $row['id_ska'] . '" target="_blank">
-                                                <i class="material-icons">print</i> PRINT</a>
-                                            <a class="btn small deep-orange waves-effect waves-light" href="?page=sk&act=del&id_ska=' . $row['id_ska'] . '">
-                                                <i class="material-icons">delete</i> DEL</a>
+                                            <a class="btn-small blue waves-effect waves-light black-text" href="?page=sk&act=edit&id_ska=' . $row['id_ska'] . '"> EDIT</a>
+                                            <a class="btn-small yellow darken-3 waves-effect waves-light black-text" href="?page=ctk&id_ska=' . $row['id_ska'] . '" target="_blank"> PRINT</a>
+                                            <a class="btn-small deep-orange waves-effect waves-light black-text" href="?page=sk&act=del&id_ska=' . $row['id_ska'] . '"> DELETE</a>
                                         </td>
                                     </tr>
                                 </tbody>';
@@ -193,83 +137,70 @@ if (empty($_SESSION['id_user'])) {
             echo '</table><br/><br/>
                             </div>
                         </div>
+                        </div>
                         <!-- Row form END -->';
         } else {
-
-            echo '<div class="col m12" id="colres">
+            echo '
+                        <div class="section">
+                        <h4 class="header">Surat Keterangan Aktif Kerja</h4>
+                        <div class="col m4">
+                        <ul class="left">
+                            <li class="waves-effect waves-light"><a href="?page=sk&act=add"><i class="material-icons md-24">add_circle</i> Tambah Data</a></li>
+                        </ul>
+                        <ul>
+                        <form method="post" action="?page=sk">
+                            <div class="input-field">
+                                <input id="search" type="search" name="cari" placeholder="cari surat berdasarkan nama karyawan" required>
+                                <input type="submit" name="submit" class="hide">
+                            </div>
+                        </form>
+                        </ul>
+                        </div>
+                            <!--DataTables example-->
+                            <div id="table-datatables">
+                                <div class="row">
+                                <div class="col m12" id="colres">
                                 <table class="bordered" id="tbl">
                                     <thead class="blue lighten-4" id="head">
-                                        <tr>
-                                            <th width="4%">No</th>
-                                            <th width="20%">Nomor Surat<br/>Tanggal Masuk</th>
-                                            <th width="19%">Nama</th>
-                                            <th width="19%">NIP</th>
-                                            <th width="14%">Departemen</th>
-                                            <th width="24%">Tindakan</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        <tr>';
-
+                                                <tr>
+                                                <th width="4%">No</th>
+                                                <th width="16%">Nomor Surat<br/>Tanggal Masuk</th>
+                                                <th width="24%">Nama</th>
+                                                <th width="17%">NIP</th>
+                                                <th width="12%">Departemen</th>
+                                                <th width="12%">Tanggal Buat Surat</th>
+                                                <th width="15%">Tindakan</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>';
             //script untuk menampilkan data
             $query = mysqli_query($config, "SELECT * FROM tbl_ska ORDER BY no_ska DESC");
             if (mysqli_num_rows($query) > 0) {
                 $no = 1;
                 while ($row = mysqli_fetch_array($query)) {
-                    $y = substr($row['tgl_masuk'], 0, 4);
-                    $m = substr($row['tgl_masuk'], 5, 2);
-                    $d = substr($row['tgl_masuk'], 8, 2);
-
-                    if ($m == "01") {
-                        $nm = "Januari";
-                    } elseif ($m == "02") {
-                        $nm = "Februari";
-                    } elseif ($m == "03") {
-                        $nm = "Maret";
-                    } elseif ($m == "04") {
-                        $nm = "April";
-                    } elseif ($m == "05") {
-                        $nm = "Mei";
-                    } elseif ($m == "06") {
-                        $nm = "Juni";
-                    } elseif ($m == "07") {
-                        $nm = "Juli";
-                    } elseif ($m == "08") {
-                        $nm = "Agustus";
-                    } elseif ($m == "09") {
-                        $nm = "September";
-                    } elseif ($m == "10") {
-                        $nm = "Oktober";
-                    } elseif ($m == "11") {
-                        $nm = "November";
-                    } elseif ($m == "12") {
-                        $nm = "Desember";
-                    }
 
                     echo '  <td>' . $no++ . '</td>
-                            <td>' . $row['no_ska'] . '<br/><hr/>' . $d . " " . $nm . " " . $y . '</td>
+                            <td>' . $row['no_ska'] . '<br/><hr/>' . $tgl = date('d M Y ', strtotime($row['tgl_masuk'])) . '</td>
                             <td>' . $row['nama_ska'] . '</td>
                             <td>' . $row['nip_ska'] . '</td>
                             <td>' . $row['dept_ska'] . '</td>
+                            <td>' . $tgl = date('d M Y ', strtotime($row['tgl_buat'])) . '</td>
                             <td>
-                                <a class="btn small blue waves-effect waves-light" href="?page=sk&act=edit&id_ska=' . $row['id_ska'] . '">
-                                    <i class="material-icons">edit</i> EDIT</a>
-                                <a class="btn small yellow darken-3 waves-effect waves-light" href="?page=ctk&id_ska=' . $row['id_ska'] . '" target="_blank">
-                                    <i class="material-icons">print</i> PRINT</a>
-                                <a class="btn small deep-orange waves-effect waves-light" href="?page=sk&act=del&id_ska=' . $row['id_ska'] . '">
-                                    <i class="material-icons">delete</i> DEL</a>
+                                <a class="btn-small blue waves-effect waves-light black-text" href="?page=sk&act=edit&id_ska=' . $row['id_ska'] . '"> EDIT </a>
+                                <a class="btn-small yellow darken-3 waves-effect waves-light black-text" href="?page=ctk&id_ska=' . $row['id_ska'] . '" target="_blank"> PRINT</a>
+                                <a class="btn-small deep-orange waves-effect waves-light black-text" href="?page=sk&act=del&id_ska=' . $row['id_ska'] . '"> DELETE</a>
                             </td>
                         </tr>
                     </tbody>';
                 }
-            } else {
-                echo '<tr><td colspan="5"><center><p class="add">Tidak ada data yang ditemukan. <u><a href="?page=sk&act=add">Tambah data baru</a></u></p></center></td></tr>';
             }
             echo '</table><br/><br/>
                             </div>
                         </div>
-                        <!-- Row form END -->';
+                        <!-- Row form END -->
+                            </div>
+                            </div>';
         }
     }
 }

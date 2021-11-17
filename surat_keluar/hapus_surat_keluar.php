@@ -28,6 +28,12 @@ if (empty($_SESSION['id_user'])) {
         while ($row = mysqli_fetch_array($query)) {
 
             echo '<!-- Row form Start -->
+            <div id="main">
+                <div class="wrapper">
+            <!-- START CONTENT -->
+                    <section id="content"><br/>
+                <!--start container-->
+                        <div class="container">
 				<div class="row jarak-card">
 				    <div class="col m12">
                         <div class="card">
@@ -48,11 +54,6 @@ if (empty($_SESSION['id_user'])) {
                                             <td width="13%">Tanggal Surat</td>
                                             <td width="1%">:</td>
                                             <td width="86%">' . $tgl = date('d M Y ', strtotime($row['tgl_surat'])) . '</td>
-                                        </tr>
-        				                <tr>
-                                            <td width="13%">Tujuan </td>
-                                            <td width="1%">:</td>
-                                            <td width="86%">' . $row['tujuan_sk'] . '</td>
                                         </tr>
         				                <tr>
         				                    <td width="13%">Isi Ringkas</td>
@@ -90,6 +91,11 @@ if (empty($_SESSION['id_user'])) {
                         </div>
                     </div>
                 </div>
+                </div>
+            <br/>
+            </section>
+            </div>
+            </div>
                 <!-- Row form END -->';
 
             if (isset($_REQUEST['submit'])) {
@@ -117,14 +123,12 @@ if (empty($_SESSION['id_user'])) {
                     $query = mysqli_query($config, "DELETE FROM tbl_surat_keluar WHERE id_sk='$id_sk'");
 
                     if ($query == true) {
-                        $_SESSION['succDel'] = 'SUKSES! Data berhasil dihapus<br/>';
+                        $_SESSION['succDel'] = 'SUKSES! Data berhasil dihapus';
                         header("Location: ./admin.php?page=tsk");
                         die();
                     } else {
                         $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
-                        echo '<script language="javascript">
-                                    window.location.href="./admin.php?page=tsk&act=del&id_sk=' . $id_sk . '";
-                                  </script>';
+                        echo '<script language="javascript">window.history.back();</script>';
                     }
                 }
             }

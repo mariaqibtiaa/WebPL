@@ -8,8 +8,19 @@ if (empty($_SESSION['id_user'])) {
 
     echo '
         <style type="text/css">
-            .container {
-                margin: 40px;
+            header,
+            #non-printable {
+                display: none !important;
+            }
+            #printable {
+                display: block;
+            }
+            footer,
+            #non-printable {
+                display: none !important;
+            }
+            #printable {
+                display: block;
             }
             table {
                 background: #fff;
@@ -73,6 +84,11 @@ if (empty($_SESSION['id_user'])) {
                 body {
                     font-size: 12pt;
                     color: #212121;
+                    margin-left: 50px;
+                    margin-right: 50px;
+                }
+                #printable {
+                    display: block;
                 }
                 table {
                     width: 100%;
@@ -115,7 +131,6 @@ if (empty($_SESSION['id_user'])) {
                 }   
                 .leading {
                     font-weight: bold;
-                    margin-bottom: -10px;
                     font-size: 12pt;
                 }
                 #logo {
@@ -131,7 +146,6 @@ if (empty($_SESSION['id_user'])) {
         </style>
 
         <body onload="window.print()">
-
         <!-- Container START -->
         <div class="container">
                 <div class="disp">';
@@ -228,7 +242,7 @@ if (empty($_SESSION['id_user'])) {
                             </tr>
                             <tr>
                                 <td colspan="3">
-                                    Bogor, 
+                                    Bogor, ' . $tgl = date('d M Y ', strtotime($row['tgl_buat'])) . '
                                 </td>
                             </tr>
                             ';
@@ -254,7 +268,6 @@ if (empty($_SESSION['id_user'])) {
             </div>
     </div>
     <!-- Container END -->
-
     </body>';
     }
 }

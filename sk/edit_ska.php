@@ -6,12 +6,17 @@ if (empty($_SESSION['id_user'])) {
     die();
 } else {
 
+    echo '
+        <div id="main">
+        <div class="wrapper">
+            <section id="content"><br />';
+
     if (isset($_REQUEST['submit'])) {
 
         //validasi form kosong
         if (
             $_REQUEST['no_ska'] == "" || $_REQUEST['nama_ska'] == "" || $_REQUEST['nip_ska'] == ""
-            || $_REQUEST['tgl_masuk'] == ""  || $_REQUEST['dept_ska'] == ""
+            || $_REQUEST['tgl_masuk'] == ""  || $_REQUEST['tgl_buat'] == ""  || $_REQUEST['dept_ska'] == ""
         ) {
             $_SESSION['errEmpty'] = 'ERROR! Semua form wajib diisi';
             echo '<script language="javascript">window.history.back();</script>';
@@ -22,6 +27,7 @@ if (empty($_SESSION['id_user'])) {
             $nama_ska = $_REQUEST['nama_ska'];
             $nip_ska = $_REQUEST['nip_ska'];
             $tgl_masuk = $_REQUEST['tgl_masuk'];
+            $tgl_buat = $_REQUEST['tgl_buat'];
             $dept_ska = $_REQUEST['dept_ska'];
 
             //validasi input data
@@ -45,20 +51,26 @@ if (empty($_SESSION['id_user'])) {
                             echo '<script language="javascript">window.history.back();</script>';
                         } else {
 
-                            if (!preg_match("/^[a-zA-Z0-9.,()\/ -]*$/", $dept_ska)) {
-                                $_SESSION['edept_ska'] = 'Form dept_ska hanya boleh mengandung karakter huruf, angka, spasi, titik(.), koma(,), minus(-), garis miring(/), dan kurung()';
+                            if (!preg_match("/^[0-9.-]*$/", $tgl_buat)) {
+                                $_SESSION['etgl_buat'] = 'Form Tanggal Surat hanya boleh mengandung angka dan minus(-)';
                                 echo '<script language="javascript">window.history.back();</script>';
                             } else {
 
-                                $query = mysqli_query($config, "UPDATE tbl_ska SET no_ska='$no_ska', nama_ska='$nama_ska',nip_ska='$nip_ska',tgl_masuk='$tgl_masuk',dept_ska='$dept_ska' WHERE id_ska='$id_ska'");
-
-                                if ($query == true) {
-                                    $_SESSION['succEdit'] = 'SUKSES! Data berhasil diupdate';
-                                    header("Location: ./admin.php?page=sk");
-                                    die();
-                                } else {
-                                    $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
+                                if (!preg_match("/^[a-zA-Z0-9.,_()%&@\/\r\n -]*$/", $dept_ska)) {
+                                    $_SESSION['edept_ska'] = 'Form dept_ska hanya boleh mengandung karakter huruf, angka, spasi, titik(.), koma(,), minus(-), garis miring(/), dan kurung()';
                                     echo '<script language="javascript">window.history.back();</script>';
+                                } else {
+
+                                    $query = mysqli_query($config, "UPDATE tbl_ska SET no_ska='$no_ska', nama_ska='$nama_ska',nip_ska='$nip_ska',tgl_masuk='$tgl_masuk',tgl_buat='$tgl_buat',dept_ska='$dept_ska' WHERE id_ska='$id_ska'");
+
+                                    if ($query == true) {
+                                        $_SESSION['succEdit'] = 'SUKSES! Data berhasil diupdate';
+                                        header("Location: ./admin.php?page=sk");
+                                        die();
+                                    } else {
+                                        $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
+                                        echo '<script language="javascript">window.history.back();</script>';
+                                    }
                                 }
                             }
                         }
@@ -69,25 +81,9 @@ if (empty($_SESSION['id_user'])) {
     } else {
 
         $id_ska = mysqli_real_escape_string($config, $_REQUEST['id_ska']);
-        $query = mysqli_query($config, "SELECT id_ska, no_ska, nama_ska, nip_ska, tgl_masuk, dept_ska FROM tbl_ska WHERE id_ska='$id_ska'");
-        list($id_ska, $no_ska, $nama_ska, $nip_ska, $tgl_masuk, $dept_ska) = mysqli_fetch_array($query);
+        $query = mysqli_query($config, "SELECT id_ska, no_ska, nama_ska, nip_ska, tgl_masuk, tgl_buat, dept_ska FROM tbl_ska WHERE id_ska='$id_ska'");
+        list($id_ska, $no_ska, $nama_ska, $nip_ska, $tgl_masuk, $tgl_buat, $dept_ska) = mysqli_fetch_array($query);
 ?>
-
-        <!-- Row Start -->
-        <div class="row">
-            <!-- Secondary Nav START -->
-            <div class="col s12">
-                <nav class="secondary-nav">
-                    <div class="nav-wrapper #b71c1c red darken-4">
-                        <ul class="left">
-                            <li class="waves-effect waves-light"><a href="#" class="judul"><i class="material-icons">edit</i> Edit Data Surat Keterangan Aktif</a></li>
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-            <!-- Secondary Nav END -->
-        </div>
-        <!-- Row END -->
 
         <?php
         if (isset($_SESSION['errQ'])) {
@@ -118,6 +114,11 @@ if (empty($_SESSION['id_user'])) {
         }
         ?>
 
+        <div class="col m7">
+            <ul class="left">
+                <h4 class="header">Edit Data Surat Keterangan Aktif Kerja</h4>
+            </ul>
+        </div>
         <!-- Row form Start -->
         <div class="row jarak-form">
 
@@ -187,6 +188,18 @@ if (empty($_SESSION['id_user'])) {
                         ?>
                         <label for="tgl_masuk">Tanggal Masuk</label>
                     </div>
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix md-prefix">date_range</i>
+                        <input id="tgl_masuk" type="text" name="tgl_buat" class="datepicker" value="<?php echo $tgl_buat; ?>" required>
+                        <?php
+                        if (isset($_SESSION['etgl_buat'])) {
+                            $etgl_buat = $_SESSION['etgl_buat'];
+                            echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $etgl_buat . '</div>';
+                            unset($_SESSION['etgl_buat']);
+                        }
+                        ?>
+                        <label for="tgl_buat">Tanggal Buat Surat</label>
+                    </div>
                 </div>
                 <!-- Row in form END -->
 
@@ -198,13 +211,15 @@ if (empty($_SESSION['id_user'])) {
                         <a href="?page=sk" class="btn-large deep-orange waves-effect waves-light">BATAL <i class="material-icons">clear</i></a>
                     </div>
                 </div>
-
+                <br />
             </form>
             <!-- Form END -->
 
         </div>
         <!-- Row form END -->
-
+        </section>
+        </div>
+        </div>
 <?php
     }
 }

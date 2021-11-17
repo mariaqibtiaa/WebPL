@@ -5,7 +5,6 @@ if (empty($_SESSION['id_user'])) {
     header("Location: ./");
     die();
 } else {
-
     if (isset($_SESSION['errQ'])) {
         $errQ = $_SESSION['errQ'];
         echo '<div id="alert-message" class="row jarak-card">
@@ -26,16 +25,11 @@ if (empty($_SESSION['id_user'])) {
     if (mysqli_num_rows($query) > 0) {
         $no = 1;
         while ($row = mysqli_fetch_array($query)) {
-
-            if ($_SESSION['id_user'] != $row['id_user'] and $_SESSION['id_user'] != 1) {
-                echo '<script language="javascript">
-                        window.alert("ERROR! Anda tidak memiliki hak akses untuk menghapus data ini");
-                        window.location.href="./admin.php?page=tsm";
-                      </script>';
-            } else {
-
-                echo '
-                <!-- Row form Start -->
+            echo '
+                <div id="main">
+                <div class="wrapper">
+                    <section id="content"><br/>
+                        <div class="container">
 				<div class="row jarak-card">
 				    <div class="col m12">
                     <div class="card">
@@ -58,35 +52,30 @@ if (empty($_SESSION['id_user'])) {
                                     <td width="86%">' . $tgl = date('d M Y ', strtotime($row['tgl_surat'])) . '</td>
                                 </tr>
                                 <tr>
-                                    <td width="13%">kategori Surat</td>
+                                    <td width="13%">Perihal Surat</td>
                                     <td width="1%">:</td>
-                                    <td width="86%">' . $row['kategori_sm'] . '</td>
+                                    <td width="86%">' . $row['perihal_sm'] . '</td>
                                 </tr>
     			                <tr>
-                                    <td width="13%">kepada</td>
+                                    <td width="13%">Asal Surat</td>
                                     <td width="1%">:</td>
-                                    <td width="86%">' . $row['kepada_sm'] . '</td>
+                                    <td width="86%">' . $row['asal_sm'] . '</td>
                                 </tr>
                                 <tr>
-                                    <td width="13%">pic</td>
+                                    <td width="13%">Isi Ringkas</td>
                                     <td width="1%">:</td>
-                                    <td width="86%">' . $row['pic_sm'] . '</td>
+                                    <td width="86%">' . $row['isi_sm'] . '</td>
                                 </tr>
-    			                <tr>
-    		                        <td width="13%">No. Isi</td>
-    		                        <td width="1%">:</td>
-    		                        <td width="86%">' . $row['isi_sm'] . '</td>
-    			                </tr>
     			                <tr>
     			                    <td width="13%">File</td>
     			                    <td width="1%">:</td>
     			                    <td width="86%">';
-                if (!empty($row['file'])) {
-                    echo ' <a class="blue-text" href="?page=gsm&act=fsm&id_sm=' . $row['id_sm'] . '">' . $row['file'] . '</a>';
-                } else {
-                    echo ' Tidak ada file yang diupload';
-                }
-                echo '</td>
+            if (!empty($row['file'])) {
+                echo ' <a class="blue-text" href="?page=gsm&act=fsm&id_sm=' . $row['id_sm'] . '">' . $row['file'] . '</a>';
+            } else {
+                echo ' Tidak ada file yang diupload';
+            }
+            echo '</td>
     			                </tr>
     			            </tbody>
     			   		</table>
@@ -98,43 +87,47 @@ if (empty($_SESSION['id_user'])) {
     	            </div>
                 </div>
             </div>
+            </div>
+            <br/>
+            </section>
+            </div>
+            </div>
             <!-- Row form END -->';
 
-                if (isset($_REQUEST['submit'])) {
-                    $id_sm = $_REQUEST['id_sm'];
+            if (isset($_REQUEST['submit'])) {
+                $id_sm = $_REQUEST['id_sm'];
 
-                    //jika ada file akan mengekseskusi script dibawah ini
-                    if (!empty($row['file'])) {
-                        unlink("upload/surat_masuk/" . $row['file']);
-                        $query = mysqli_query($config, "DELETE FROM tbl_surat_masuk WHERE id_sm='$id_sm'");
-                        $query2 = mysqli_query($config, "DELETE FROM tbl_disposisi WHERE id_sm='$id_sm'");
+                //jika ada file akan mengekseskusi script dibawah ini
+                if (!empty($row['file'])) {
+                    unlink("upload/surat_masuk/" . $row['file']);
+                    $query = mysqli_query($config, "DELETE FROM tbl_surat_masuk WHERE id_sm='$id_sm'");
+                    $query2 = mysqli_query($config, "DELETE FROM tbl_disposisi WHERE id_sm='$id_sm'");
 
-                        if ($query == true) {
-                            $_SESSION['succDel'] = 'SUKSES! Data berhasil dihapus<br/>';
-                            header("Location: ./admin.php?page=tsm");
-                            die();
-                        } else {
-                            $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
-                            echo '<script language="javascript">
-                                    window.location.href="./admin.php?page=tsm&act=del&id_sm=' . $id_sm . '";
-                                  </script>';
-                        }
+                    if ($query == true) {
+                        $_SESSION['succDel'] = 'SUKSES! Data berhasil dihapus<br/>';
+                        header("Location: ./admin.php?page=tsm");
+                        die();
                     } else {
-
-                        //jika tidak ada file akan mengekseskusi script dibawah ini
-                        $query = mysqli_query($config, "DELETE FROM tbl_surat_masuk WHERE id_sm='$id_sm'");
-                        $query2 = mysqli_query($config, "DELETE FROM tbl_disposisi WHERE id_sm='$id_sm'");
-
-                        if ($query == true) {
-                            $_SESSION['succDel'] = 'SUKSES! Data berhasil dihapus<br/>';
-                            header("Location: ./admin.php?page=tsm");
-                            die();
-                        } else {
-                            $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
-                            echo '<script language="javascript">
+                        $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
+                        echo '<script language="javascript">
                                     window.location.href="./admin.php?page=tsm&act=del&id_sm=' . $id_sm . '";
                                   </script>';
-                        }
+                    }
+                } else {
+
+                    //jika tidak ada file akan mengekseskusi script dibawah ini
+                    $query = mysqli_query($config, "DELETE FROM tbl_surat_masuk WHERE id_sm='$id_sm'");
+                    $query2 = mysqli_query($config, "DELETE FROM tbl_disposisi WHERE id_sm='$id_sm'");
+
+                    if ($query == true) {
+                        $_SESSION['succDel'] = 'SUKSES! Data berhasil dihapus<br/>';
+                        header("Location: ./admin.php?page=tsm");
+                        die();
+                    } else {
+                        $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';
+                        echo '<script language="javascript">
+                                    window.location.href="./admin.php?page=tsm&act=del&id_sm=' . $id_sm . '";
+                                  </script>';
                     }
                 }
             }

@@ -20,42 +20,13 @@ if (empty($_SESSION['id_user'])) {
                 break;
         }
     } else {
-?>
 
-        <!-- Row Start -->
-        <div class="row">
-            <!-- Secondary Nav START -->
-            <div class="col s12">
-                <div class="z-depth-1">
-                    <nav class="secondary-nav">
-                        <div class="nav-wrapper #b71c1c red darken-4">
-                            <div class="col m7">
-                                <ul class="left">
-                                    <li class="waves-effect waves-light hide-on-small-only"><a href="?page=tsk" class="judul"><i class="material-icons">drafts</i> Surat Keluar</a></li>
-                                    <li class="waves-effect waves-light">
-                                        <a href="?page=tsk&act=add"><i class="material-icons md-24">add_circle</i> Tambah Data</a>
-                                    </li>
-                                    <li class="waves-effect waves-light"><a href="?page=ask"><i class="material-icons md-24">file_upload</i> Cetak Data</a></li>
-                                </ul>
-                            </div>
-                            <div class="col m5 hide-on-med-and-down">
-                                <form method="post" action="?page=tsk">
-                                    <div class="input-field round-in-box">
-                                        <input id="search" type="search" name="cari" required>
-                                        <label for="search"><i class="material-icons">search</i></label>
-                                        <input type="submit" name="submit" class="hidden">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </nav>
-                </div>
-            </div>
-            <!-- Secondary Nav END -->
-        </div>
-        <!-- Row END -->
+        echo '
+        <div id="main">
+        <div class="wrapper">
+            <section id="content">
+                <div class="container">';
 
-        <?php
         if (isset($_SESSION['succAdd'])) {
             $succAdd = $_SESSION['succAdd'];
             echo '<div id="alert-message" class="row">
@@ -94,34 +65,32 @@ if (empty($_SESSION['id_user'])) {
                                 </div>
                             </div>';
             unset($_SESSION['succDel']);
-        }
-        ?>
-
+        } ?>
         <!-- Row form Start -->
         <div class="row jarak-form">
 
     <?php
         if (isset($_REQUEST['submit'])) {
             $cari = mysqli_real_escape_string($config, $_REQUEST['cari']);
-            echo '
-                        <div class="col s12" style="margin-top: -18px;">
-                            <div class="card blue lighten-5">
-                                <div class="card-content">
-                                <p class="description">Hasil pencarian untuk kata kunci <strong>"' . stripslashes($cari) . '"</strong><span class="right"><a href="?page=tsk"><i class="material-icons md-36" style="color: #333;">clear</i></a></span></p>
+            echo '       
+                            <div class="section"><br/>
+                            <div class="col s12" style="margin-top: -18px;">
+                                <div class="card blue lighten-5">
+                                    <div class="card-content">
+                                    <p class="description">Hasil pencarian isi ringkas surat keluar untuk kata kunci <strong>"' . stripslashes($cari) . '"</strong><span class="right"><a href="?page=tsk"><i class="material-icons md-36" style="color: #333;">clear</i></a></span></p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
                         <div class="col m12" id="colres">
                             <table class="bordered" id="tbl">
                                 <thead class="blue lighten-4" id="head">
                                     <tr>
                                         <th width="4%">No</th>
-                                        <th width="20%">No. Surat<br/>Tgl Surat</th>
-                                        <th width="15%">Tujuan</th>
-                                        <th width="28%">Isi Ringkas<br/> File</th>
-                                        <th width="15%">Kepada<br/>pic</th>
-                                        <th width="18%">Tindakan</th>
+                                        <th width="18%">No. Surat<br />Tgl Surat</th>
+                                        <th width="39%">Isi Ringkas<br /> File</th>
+                                        <th width="29%">Kepada<br />pic</th>
+                                        <th width="10%">Tindakan</th>
                                     </tr>
                                 </thead>
 
@@ -134,38 +103,8 @@ if (empty($_SESSION['id_user'])) {
                 $no = 1;
                 while ($row = mysqli_fetch_array($query)) {
 
-                    $y = substr($row['tgl_surat'], 0, 4);
-                    $m = substr($row['tgl_surat'], 5, 2);
-                    $d = substr($row['tgl_surat'], 8, 2);
-
-                    if ($m == "01") {
-                        $nm = "Januari";
-                    } elseif ($m == "02") {
-                        $nm = "Februari";
-                    } elseif ($m == "03") {
-                        $nm = "Maret";
-                    } elseif ($m == "04") {
-                        $nm = "April";
-                    } elseif ($m == "05") {
-                        $nm = "Mei";
-                    } elseif ($m == "06") {
-                        $nm = "Juni";
-                    } elseif ($m == "07") {
-                        $nm = "Juli";
-                    } elseif ($m == "08") {
-                        $nm = "Agustus";
-                    } elseif ($m == "09") {
-                        $nm = "September";
-                    } elseif ($m == "10") {
-                        $nm = "Oktober";
-                    } elseif ($m == "11") {
-                        $nm = "November";
-                    } elseif ($m == "12") {
-                        $nm = "Desember";
-                    }
                     echo '              <td>' . $no++ . '</td>
-                                        <td>' . $row['no_sk'] . '<br/><hr/>' . $d . " " . $nm . " " . $y . '</td>
-                                        <td>' . $row['tujuan_sk'] . '</td>
+                                        <td>' . $row['no_sk'] . '<br/><hr/>' . $tgl = date('d M Y ', strtotime($row['tgl_surat'])) . '</td>
                                         <td>' . substr($row['isi_sk'], 0, 200) . '<br/><br/><strong>File :</strong>';
 
                     if (!empty($row['file'])) {
@@ -176,10 +115,8 @@ if (empty($_SESSION['id_user'])) {
                     echo '</td>
                     <td>' . $row['kepada_sk'] . '<br/><hr/>' . $row['pic_sk'] . '</td>
                                         <td>
-                                        <a class="btn small blue waves-effect waves-light" href="?page=tsk&act=edit&id_sk=' . $row['id_sk'] . '">
-                                                    <i class="material-icons">edit</i> EDIT</a>
-                                                <a class="btn small deep-orange waves-effect waves-light" href="?page=tsk&act=del&id_sk=' . $row['id_sk'] . '">
-                                                    <i class="material-icons">delete</i> DEL</a>
+                                        <a class="btn-small blue waves-effect waves-light black-text" href="?page=tsk&act=edit&id_sk=' . $row['id_sk'] . '"> EDIT</a>
+                                                <a class="btn-small deep-orange waves-effect waves-light black-text" href="?page=tsk&act=del&id_sk=' . $row['id_sk'] . '"> DELETE</a>
                                         </td>
                                     </tr>
                                 </tbody>';
@@ -190,92 +127,80 @@ if (empty($_SESSION['id_user'])) {
             echo '</table><br/><br/>
                             </div>
                         </div>
+                        </div>
+                        </div>
+                        </section>
+                        </div>
+                        </div>
                         <!-- Row form END -->';
         } else {
-
             echo '
-                        <div class="col m12" id="colres">
-                        <table class="bordered" id="tbl">
-                            <thead class="blue lighten-4" id="head">
-                                <tr>
-                                    <th width="4%">No</th>
-                                    <th width="20%">No. Surat<br/>Tgl Surat</th>
-                                    <th width="15%">Tujuan</th>
-                                    <th width="28%">Isi Ringkas<br/> File</th>
-                                    <th width="15%">Kepada<br/>pic</th>
-                                    <th width="18%">Tindakan</th>
-                                </tr>
-                            </thead>
+                        <div class="section">
+                            <div class="col m3">
+                                <ul class="left">
+                                    <h4 class="header">Surat Keluar</h4>
+                                    <li class="waves-effect waves-light"><a href="?page=tsk&act=add"><i class="material-icons md-24">add_circle</i> Tambah Data</a></li>
+                                    <li class="waves-effect waves-light"><a href="?page=ask"><i class="material-icons md-24">filter_list</i> Filter Surat Masuk</a></li>
+                                    <li class="waves-effect waves-light"><a href="?page=ctksk"  target="_blank"><i class="material-icons md-24">file_upload</i> Cetak Surat</a></li>
+                                </ul>
+                                <ul>
+                                    <form method="post" action="?page=tsk">
+                                        <div class="input-field">
+                                            <input id="search" type="search" name="cari" placeholder="cari surat berdasarkan isi ringkas" required>
+                                            <input type="submit" name="submit" class="hide">
+                                        </div>
+                                    </form>
+                                </ul>
+                            </div>
 
-                            <tbody>
-                                <tr>';
+                            <!--DataTables example-->
+                            <div id="table-datatables">
+                                <div class="row">
+                                    <div class="col m12" id="colres">
+                                        <table class="bordered" id="tbl">
+                                            <thead class="blue lighten-4" id="head">
+                                                <tr>
+                                                    <th width="4%">No</th>
+                                                    <th width="18%">No. Surat<br />Tgl Surat</th>
+                                                    <th width="39%">Isi Ringkas<br /> File</th>
+                                                    <th width="29%">Kepada<br />pic</th>
+                                                    <th width="10%">Tindakan</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>';
 
             //script untuk mencari data
-            $query = mysqli_query($config, "SELECT * FROM tbl_surat_keluar ORDER by no_sk DESC");
-            if (mysqli_num_rows($query) > 0) {
-                $no = 1;
-                while ($row = mysqli_fetch_array($query)) {
+            $query = mysqli_query($config, "SELECT * FROM tbl_surat_keluar ORDER BY no_sk DESC");
+            $no = 1;
+            while ($row = mysqli_fetch_array($query)) {
+                echo '<tr>
+                                                    <td>' . $no++ . '</td>
+                                                    <td>' . $row['no_sk'] . '<br/><hr/>' . $tgl = date('d M Y ', strtotime($row['tgl_surat'])) . '</td>
+                                                    <td>' . substr($row['isi_sk'], 0, 200) . '<br/><br/><strong>File :</strong>';
 
-                    $y = substr($row['tgl_surat'], 0, 4);
-                    $m = substr($row['tgl_surat'], 5, 2);
-                    $d = substr($row['tgl_surat'], 8, 2);
-
-                    if ($m == "01") {
-                        $nm = "Januari";
-                    } elseif ($m == "02") {
-                        $nm = "Februari";
-                    } elseif ($m == "03") {
-                        $nm = "Maret";
-                    } elseif ($m == "04") {
-                        $nm = "April";
-                    } elseif ($m == "05") {
-                        $nm = "Mei";
-                    } elseif ($m == "06") {
-                        $nm = "Juni";
-                    } elseif ($m == "07") {
-                        $nm = "Juli";
-                    } elseif ($m == "08") {
-                        $nm = "Agustus";
-                    } elseif ($m == "09") {
-                        $nm = "September";
-                    } elseif ($m == "10") {
-                        $nm = "Oktober";
-                    } elseif ($m == "11") {
-                        $nm = "November";
-                    } elseif ($m == "12") {
-                        $nm = "Desember";
-                    }
-
-                    echo '
-                                    <td>' . $no++ . '</td>
-                                    <td>' . $row['no_sk'] . '<br/><hr/>' . $d . " " . $nm . " " . $y . '</td>
-                                    <td>' . $row['tujuan_sk'] . '</td>
-                                    <td>' . substr($row['isi_sk'], 0, 200) . '<br/><br/><strong>File :</strong>';
-
-                    if (!empty($row['file'])) {
-                        echo ' <strong><a href="./upload/surat_keluar/' . $row['file'] . '" target="_blank">' . $row['file'] . '</a></strong>';
-                    } else {
-                        echo ' <em>Tidak ada file yang diupload</em>';
-                    }
-                    echo '</td>
-                                    <td>' . $row['kepada_sk'] . '<br/><hr/>' . $row['pic_sk'] . '</td>
-                                    <td>
-                                            <a class="btn small blue waves-effect waves-light" href="?page=tsk&act=edit&id_sk=' . $row['id_sk'] . '">
-                                                <i class="material-icons">edit</i> EDIT</a>
-                                            <a class="btn small deep-orange waves-effect waves-light" href="?page=tsk&act=del&id_sk=' . $row['id_sk'] . '">
-                                                <i class="material-icons">delete</i> DEL</a>
-                                    </td>
-                                </tr>
-                            </tbody>';
+                if (!empty($row['file'])) {
+                    echo ' <strong><a href="./upload/surat_keluar/' . $row['file'] . '" target="_blank">' . $row['file'] . '</a></strong>';
+                } else {
+                    echo ' <em>Tidak ada file yang diupload</em>';
                 }
-            } else {
-                echo '<tr><td colspan="5"><center><p class="add">Tidak ada data untuk ditampilkan. <u><a href="?page=tsk&act=add">Tambah data baru</a></u> </p></center></td></tr>';
+                echo '</td>
+                                                <td>' . $row['kepada_sk'] . '<br/><hr/>' . $row['pic_sk'] . '</td>
+                                                <td>
+                                                        <a class="btn-small blue waves-effect waves-light black-text" href="?page=tsk&act=edit&id_sk=' . $row['id_sk'] . '">EDIT</a>
+                                                        <a class="btn-small deep-orange waves-effect waves-light black-text" href="?page=tsk&act=del&id_sk=' . $row['id_sk'] . '"> DELETE</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>';
             }
-            echo '</table>
+            echo '</table><br/><br/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <!-- Row form END -->';
+                    </section>
+                </div>
+            </div>';
         }
     }
 }
-    ?>

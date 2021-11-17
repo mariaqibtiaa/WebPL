@@ -6,23 +6,6 @@ if (empty($_SESSION['id_user'])) {
     die();
 } else {
 
-    echo '
-        <style type="text/css">
-            .hidd {
-                display: none
-            }
-            @media print{
-                body {
-                    font-size: 12px!important;
-                    color: #212121;
-                }
-                .separator {
-                    border-bottom: 2px solid #616161;
-                    margin: 1rem 0 -.7rem;
-                }
-            }
-        </style>';
-
     if (isset($_REQUEST['submit'])) {
 
         $dari_tanggal = $_REQUEST['dari_tanggal'];
@@ -36,27 +19,19 @@ if (empty($_SESSION['id_user'])) {
             $query = mysqli_query($config, "SELECT * FROM tbl_surat_keluar WHERE tgl_surat BETWEEN '$dari_tanggal' AND '$sampai_tanggal' ORDER by no_sk DESC");
 
             echo '
-                    <!-- SHOW DAFTAR AGENDA -->
-                    <!-- Row Start -->
-                    <div class="row">
-                        <!-- Secondary Nav START -->
-                        <div class="col s12">
-                            <div class="z-depth-1">
-                                <nav class="secondary-nav">
-                                    <div class="nav-wrapper #b71c1c red darken-4">
-                                        <div class="col 12">
-                                            <ul class="left">
-                                                <li class="waves-effect waves-light"><a href="?page=ask" class="judul"><i class="material-icons">print</i> Cetak Agenda Surat Keluar<a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </nav>
-                            </div>
+            <!-- Row form Start -->
+            <div id="main">
+                <div class="wrapper">
+                    <!-- START CONTENT -->
+                    <section id="content">
+                        <!--start container-->
+                        <div class="container">
+                            <div class="section">
+                            <div class="col m7">
+                            <ul class="left">
+                                <h4 class="header">Agenda Surat Keluar</h4>
+                            </ul>
                         </div>
-                        <!-- Secondary Nav END -->
-                    </div>
-                    <!-- Row END -->
-
                     <!-- Row form Start -->
                     <div class="row jarak-form black-text">
                         <form class="col s12" method="post" action="">
@@ -71,7 +46,7 @@ if (empty($_SESSION['id_user'])) {
                                 <label for="sampai_tanggal">Sampai Tanggal</label>
                             </div>
                             <div class="col s6">
-                                <button type="submit" name="submit" class="btn-large blue waves-effect waves-light"> TAMPILKAN <i class="material-icons">visibility</i></button>
+                                <button type="submit" name="submit" class="btn-large blue waves-effect waves-light"> TAMPILKAN</button>
                             </div>
                         </form>
                     </div>
@@ -80,86 +55,19 @@ if (empty($_SESSION['id_user'])) {
                     <div class="row agenda">
                         <div class="col s10">
                             <div class="separator"></div>
-
-                            <h5 class="hid">AGENDA SURAT KELUAR</h5>';
-
-            $y = substr($dari_tanggal, 0, 4);
-            $m = substr($dari_tanggal, 5, 2);
-            $d = substr($dari_tanggal, 8, 2);
-            $y2 = substr($sampai_tanggal, 0, 4);
-            $m2 = substr($sampai_tanggal, 5, 2);
-            $d2 = substr($sampai_tanggal, 8, 2);
-
-            if ($m == "01") {
-                $nm = "Januari";
-            } elseif ($m == "02") {
-                $nm = "Februari";
-            } elseif ($m == "03") {
-                $nm = "Maret";
-            } elseif ($m == "04") {
-                $nm = "April";
-            } elseif ($m == "05") {
-                $nm = "Mei";
-            } elseif ($m == "06") {
-                $nm = "Juni";
-            } elseif ($m == "07") {
-                $nm = "Juli";
-            } elseif ($m == "08") {
-                $nm = "Agustus";
-            } elseif ($m == "09") {
-                $nm = "September";
-            } elseif ($m == "10") {
-                $nm = "Oktober";
-            } elseif ($m == "11") {
-                $nm = "November";
-            } elseif ($m == "12") {
-                $nm = "Desember";
-            }
-
-            if ($m2 == "01") {
-                $nm2 = "Januari";
-            } elseif ($m2 == "02") {
-                $nm2 = "Februari";
-            } elseif ($m2 == "03") {
-                $nm2 = "Maret";
-            } elseif ($m2 == "04") {
-                $nm2 = "April";
-            } elseif ($m2 == "05") {
-                $nm2 = "Mei";
-            } elseif ($m2 == "06") {
-                $nm2 = "Juni";
-            } elseif ($m2 == "07") {
-                $nm2 = "Juli";
-            } elseif ($m2 == "08") {
-                $nm2 = "Agustus";
-            } elseif ($m2 == "09") {
-                $nm2 = "September";
-            } elseif ($m2 == "10") {
-                $nm2 = "Oktober";
-            } elseif ($m2 == "11") {
-                $nm2 = "November";
-            } elseif ($m2 == "12") {
-                $nm2 = "Desember";
-            }
-            echo '
-
-                            <p class="warna agenda">Agenda Surat Keluar dari tanggal <strong>' . $d . " " . $nm . " " . $y . '</strong> sampai dengan tanggal <strong>' . $d2 . " " . $nm2 . " " . $y2 . '</strong></p>
-                        </div>
-                        <div class="col s2">
-                            <button type="submit" onClick="window.print()" class="btn-large deep-orange waves-effect waves-light right">CETAK <i class="material-icons">print</i></button>
+                            <p class="warna agenda">Agenda Surat Keluar dari tanggal <strong>' . $tgl = date('d M Y ', strtotime($dari_tanggal)) . '</strong> sampai dengan tanggal <strong>' . $tgl = date('d M Y ', strtotime($sampai_tanggal)) . '</strong></p>
                         </div>
                     </div>
                     <div id="colres" class="warna cetak">
                         <table class="bordered" id="tbl" width="100%">
                             <thead class="blue lighten-4">
                                 <tr>
-                                    <th width="3%">No</th>
+                                    <th width="4%">No</th>
                                     <th width="15%">Nomor Surat</th>
-                                    <th width="10%">Tanggal<br/> Surat</th>
-                                    <th width="18%">Tujuan Surat</th>
+                                    <th width="11%">Tanggal<br/> Surat</th>
                                     <th width="30%">Isi Ringkas</th>
-                                    <th width="12%">Kepada</th>
-                                    <th width="12%">pic</th>
+                                    <th width="25%">Kepada</th>
+                                    <th width="15%">pic</th>
                             </thead>
 
                             <tbody>
@@ -169,40 +77,9 @@ if (empty($_SESSION['id_user'])) {
                 $no = 1;
                 while ($row = mysqli_fetch_array($query)) {
 
-                    $y = substr($row['tgl_surat'], 0, 4);
-                    $m = substr($row['tgl_surat'], 5, 2);
-                    $d = substr($row['tgl_surat'], 8, 2);
-
-                    if ($m == "01") {
-                        $nm = "Januari";
-                    } elseif ($m == "02") {
-                        $nm = "Februari";
-                    } elseif ($m == "03") {
-                        $nm = "Maret";
-                    } elseif ($m == "04") {
-                        $nm = "April";
-                    } elseif ($m == "05") {
-                        $nm = "Mei";
-                    } elseif ($m == "06") {
-                        $nm = "Juni";
-                    } elseif ($m == "07") {
-                        $nm = "Juli";
-                    } elseif ($m == "08") {
-                        $nm = "Agustus";
-                    } elseif ($m == "09") {
-                        $nm = "September";
-                    } elseif ($m == "10") {
-                        $nm = "Oktober";
-                    } elseif ($m == "11") {
-                        $nm = "November";
-                    } elseif ($m == "12") {
-                        $nm = "Desember";
-                    }
-
                     echo '  <td>' . $no++ . '</td>
                             <td>' . $row['no_sk'] . '</td>
-                            <td>' . $d . " " . $nm . " " . $y . '</td>
-                            <td>' . $row['tujuan_sk'] . '</td>
+                            <td>' . $tgl = date('d M Y ', strtotime($row['tgl_surat'])) . '</td>
                             <td>' . $row['isi_sk'] . '</td>
                             <td>' . $row['kepada_sk'] . '</td>
                             <td>' . $row['pic_sk'] . '
@@ -216,30 +93,27 @@ if (empty($_SESSION['id_user'])) {
             echo '
                             </table>
                         </div>
-                    <div class="jarak2"></div>';
+                    <div class="jarak2"></div>
+                    </div>
+                    </section>
+                    </div>
+                    </div>';
         }
     } else {
         echo '
-                <!-- Row Start -->
-                <div class="row">
-                    <!-- Secondary Nav START -->
-                    <div class="col s12">
-                        <div class="z-depth-1">
-                            <nav class="secondary-nav">
-                                <div class="nav-wrapper #b71c1c red darken-4">
-                                    <div class="col 12">
-                                        <ul class="left">
-                                            <li class="waves-effect waves-light"><a href="?page=ask" class="judul"><i class="material-icons">print</i> Cetak Agenda Surat Keluar<a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </nav>
-                        </div>
+        <!-- Row form Start -->
+        <div id="main">
+            <div class="wrapper">
+                <!-- START CONTENT -->
+                <section id="content">
+                    <!--start container-->
+                    <div class="container">
+                        <div class="section">
+                        <div class="col m7">
+                        <ul class="left">
+                            <h4 class="header">Agenda Surat Keluar</h4>
+                        </ul>
                     </div>
-                    <!-- Secondary Nav END -->
-                </div>
-                <!-- Row END -->
-
                 <!-- Row form Start -->
                 <div class="row jarak-form black-text">
                     <form class="col s12" method="post" action="">
@@ -254,10 +128,14 @@ if (empty($_SESSION['id_user'])) {
                             <label for="sampai_tanggal">Sampai Tanggal</label>
                         </div>
                         <div class="col s6">
-                            <button type="submit" name="submit" class="btn-large blue waves-effect waves-light"> TAMPILKAN <i class="material-icons">visibility</i></button>
+                            <button type="submit" name="submit" class="btn-large blue waves-effect waves-light"> TAMPILKAN</button>
                         </div>
                     </form>
                 </div>
-                <div class="jarak"></div>';
+                <div class="jarak"></div>
+                </div>
+                </section>
+                </div>
+                </div>';
     }
 }

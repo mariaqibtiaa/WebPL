@@ -13,28 +13,14 @@ if (empty($_SESSION['id_user'])) {
     <!doctype html>
     <html lang="en">
 
-    <!-- Include Head START -->
-    <?php include('include/head.php'); ?>
-    <!-- Include Head END -->
-
     <!-- Body START -->
 
     <body class="bg">
 
-        <!-- Header START -->
         <header>
-
-            <!-- Include Navigation START -->
-            <?php include('include/menu.php'); ?>
-            <!-- Include Navigation END -->
-
+            <?php include('include/header.php'); ?>
         </header>
-        <!-- Header END -->
-
-        <!-- Main START -->
         <main>
-
-            <!-- container START -->
             <div class="container">
 
                 <?php
@@ -46,6 +32,12 @@ if (empty($_SESSION['id_user'])) {
                             break;
                         case 'ctk':
                             include "sk/cetak_surat.php";
+                            break;
+                        case 'ctksm':
+                            include "surat_masuk/cetak_suratm.php";
+                            break;
+                        case 'ctksk':
+                            include "surat_keluar/cetak_suratk.php";
                             break;
                         case 'tsk':
                             include "surat_keluar/transaksi_surat_keluar.php";
@@ -65,64 +57,86 @@ if (empty($_SESSION['id_user'])) {
                     }
                 } else {
                 ?>
-                    <!-- Row START -->
-                    <div class="row">
-                        <div class="container">
-                            <h1>Selamat Datang</h1>
+                    <div id="main">
+                        <div class="wrapper">
+                            <!-- START CONTENT -->
+                            <section id="content">
+                                <!--start container-->
+                                <div class="container">
+                                    <h1>SELAMAT DATANG</h1>
 
-                            <hr class="my-4">
-                            <p class="lead">DagsapArchive adalah program yang akan memudahkan anda dalam mengarsip surat masuk dan surat keluar</p>
-                            <p>Anda dapat menggunakan menu-menu yang ada di atas, terima kasih</p>
-                        </div><br />
-                        <!-- Welcome Message END -->
+                                    <hr class="my-4">
+                                    <p>Dagsap Archive adalah program yang akan memudahkan anda dalam : <br /> 1. mengarsip surat masuk <br /> 2. mengarsip surat keluar <br /> 3. membuat surat keterangan aktif secara otomatis</p>
+                                    <p>Anda dapat menggunakan menu-menu yang ada di samping, terima kasih</p>
+                                    <p class="red-text">dibawah ini adalah untuk mempermudah anda mengetahui jumlah data keseluruhan yang ada di surat masuk, surat keluar dan surat keterangan aktif</p>
+                                </div><br />
+                                <!--card stats start-->
+                                <div id="card-stats">
 
-                        <?php
+                                    <?php
+                                    //menghitung jumlah surat masuk
+                                    $count1 = mysqli_num_rows(mysqli_query($config, "SELECT * FROM tbl_surat_masuk"));
 
+                                    //menghitung jumlah surat keluar
+                                    $count2 = mysqli_num_rows(mysqli_query($config, "SELECT * FROM tbl_surat_keluar"));
 
-                        //menghitung jumlah surat masuk
-                        $count1 = mysqli_num_rows(mysqli_query($config, "SELECT * FROM tbl_surat_masuk"));
+                                    //menghitung jumlah surat keluar
+                                    $count3 = mysqli_num_rows(mysqli_query($config, "SELECT * FROM tbl_ska"));
 
-                        //menghitung jumlah surat keluar
-                        $count2 = mysqli_num_rows(mysqli_query($config, "SELECT * FROM tbl_ska"));
+                                    ?>
 
-                        //menghitung jumlah surat keluar
-                        $count3 = mysqli_num_rows(mysqli_query($config, "SELECT * FROM tbl_surat_keluar"));
-
-
-                        ?>
-
-                        <!-- Info Statistic START -->
-                        <div class="col s6">
-                            <div class="card">
-                                <div class="card-content center">
-                                    <span class="card-title black-text"><i class="material-icons md-36">mail</i> Jumlah Surat Masuk</span>
-                                    <?php echo '<h5 class="black-text link">' . $count1 . ' Surat Masuk</h5>'; ?>
+                                    <div class="row mt-1">
+                                        <div class="col s12 m4">
+                                            <div class="card gradient-45deg-indigo-light-blue">
+                                                <div class="padding-4">
+                                                    <div class="col s7 m7">
+                                                        <i class="material-icons md-36">mail</i>
+                                                        <p><?php echo $count1 ?> Jumlah Surat Masuk</p>
+                                                    </div>
+                                                    <div class="col s5 m5 right-align">Surat Masuk</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col s12 m4">
+                                            <div class="card gradient-45deg-amber-amber">
+                                                <div class="padding-4">
+                                                    <div class="col s7 m7">
+                                                        <i class="material-icons md-36">mail</i>
+                                                        <p><?php echo $count2 ?> Jumlah Surat Keluar</p>
+                                                    </div>
+                                                    <div class="col s5 m5 right-align">Surat Keluar</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col s12 m4">
+                                            <div class="card gradient-45deg-red-pink">
+                                                <div class="padding-4">
+                                                    <div class="col s7 m7">
+                                                        <i class="material-icons md-36">drafts</i>
+                                                        <p><?php echo $count3 ?> Jumlah SK Aktif</p>
+                                                    </div>
+                                                    <div class="col s5 m5 right-align">SK Aktif</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+
+                                <!-- //////////////////////////////////////////////////////////////////////////// -->
                         </div>
-                        <div class="col s6">
-                            <div class="card">
-                                <div class="card-content center">
-                                    <span class="card-title black-text"><i class="material-icons md-36">email</i> Jumlah Surat Keterangan Aktif</span>
-                                    <?php echo '<h5 class="black-text link">' . $count2 . ' Surat Keterangan Aktif</h5>'; ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col s6 m12">
-                            <div class="card">
-                                <div class="card-content center">
-                                    <span class="card-title black-text"><i class="material-icons md-36">drafts</i> Jumlah Surat Keluar</span>
-                                    <?php echo '<h5 class="black-text link">' . $count3 . ' Surat Keluar</h5>'; ?>
-                                </div>
-                            </div>
-                        </div>
+                        <!--end container-->
+                        </section>
+                        <!-- END CONTENT -->
                     </div>
-                    <!-- Row END -->
-                <?php
-                }
-                ?>
+                    <!-- END WRAPPER -->
             </div>
-            <!-- container END -->
+            <!-- END MAIN -->
+        <?php
+                }
+        ?>
+
+        </div>
+        <!-- container END -->
 
         </main>
         <!-- Main END -->

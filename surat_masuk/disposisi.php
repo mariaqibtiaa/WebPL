@@ -98,13 +98,13 @@ if (empty($_SESSION['id_user'])) {
 
             if (mysqli_num_rows($query2) > 0) {
                 $no = 0;
-                while ($row = mysqli_fetch_array($query2)) {
+                while ($row2 = mysqli_fetch_array($query2)) {
                     $no++;
                     echo ' <td>' . $no . '</td>
-                                                    <td>' . $tgl = date('d M Y ', strtotime($row['tgl_diterima'])) . '<br/>' . $row['nama_penerima'] . '</td>
-                                                    <td>' . $row['no_sm'] . '<br/>' . $row['sifat'] . '</td>
-                                                    <td>' . $row['asal_sm'] . '<br/>' . $row['perihal_sm'] . '</td>
-                                                    <td>' . $tgl = date('d M Y ', strtotime($row['tgl_surat'])) . '</td>
+                                                    <td>' . $tgl = date('d M Y ', strtotime($row2['tgl_diterima'])) . '<br/>' . $row2['nama_penerima'] . '</td>
+                                                    <td>' . $row2['no_sm'] . '<br/>' . $row2['sifat'] . '</td>
+                                                    <td>' . $row2['asal_sm'] . '<br/>' . $row2['perihal_sm'] . '</td>
+                                                    <td>' . $tgl = date('d M Y ', strtotime($row2['tgl_surat'])) . '</td>
                                             </tr>
                                         </tbody>';
                 }
@@ -118,3 +118,5 @@ if (empty($_SESSION['id_user'])) {
         }
     }
 }
+
+?>

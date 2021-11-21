@@ -136,14 +136,18 @@ if (empty($_SESSION['id_user'])) {
         } else {
             echo '
                         <div class="section">
-                            <div class="col m3">
-                                <ul class="left">
-                                    <h4 class="header">Surat Keluar</h4>
+                        <div class="card blue lighten-5">
+                        <div class="card-content">
+                        <h4 class="header">Arsip Surat Keluar</h4>
+                        <div class="col m6">
+                            <ul class="text-right">
                                     <li class="waves-effect waves-light"><a href="?page=tsk&act=add"><i class="material-icons md-24">add_circle</i> Tambah Data</a></li>
                                     <li class="waves-effect waves-light"><a href="?page=ask"><i class="material-icons md-24">filter_list</i> Filter Surat Masuk</a></li>
                                     <li class="waves-effect waves-light"><a href="?page=ctksk"  target="_blank"><i class="material-icons md-24">file_upload</i> Cetak Surat</a></li>
                                 </ul>
-                                <ul>
+                                </div>
+                            <div class="col m6">
+                            <ul class="text-right">
                                     <form method="post" action="?page=tsk">
                                         <div class="input-field">
                                             <input id="search" type="search" name="cari" placeholder="cari surat berdasarkan isi ringkas" required>
@@ -152,7 +156,8 @@ if (empty($_SESSION['id_user'])) {
                                     </form>
                                 </ul>
                             </div>
-
+                            </div>
+                            </div>
                             <!--DataTables example-->
                             <div id="table-datatables">
                                 <div class="row">

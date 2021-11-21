@@ -142,11 +142,15 @@ if (empty($_SESSION['id_user'])) {
         } else {
             echo '
                         <div class="section">
+                        <div class="card blue lighten-5">
+                        <div class="card-content">
                         <h4 class="header">Surat Keterangan Aktif Kerja</h4>
-                        <div class="col m4">
+                        <div class="col m6">
                         <ul class="left">
                             <li class="waves-effect waves-light"><a href="?page=sk&act=add"><i class="material-icons md-24">add_circle</i> Tambah Data</a></li>
                         </ul>
+                        </div>
+                        <div class="col m6">
                         <ul>
                         <form method="post" action="?page=sk">
                             <div class="input-field">
@@ -155,6 +159,8 @@ if (empty($_SESSION['id_user'])) {
                             </div>
                         </form>
                         </ul>
+                        </div>
+                        </div>
                         </div>
                             <!--DataTables example-->
                             <div id="table-datatables">

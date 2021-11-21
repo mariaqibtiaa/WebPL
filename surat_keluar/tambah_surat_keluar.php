@@ -101,7 +101,7 @@ if (empty($_SESSION['id_user'])) {
 
                                         if ($query == true) {
                                             $_SESSION['succAdd'] = 'SUKSES! Data berhasil ditambahkan';
-                                            header("Location: ./admin.php?page=sk");
+                                            header("Location: ./admin.php?page=tsk");
                                             die();
                                         } else {
                                             $_SESSION['errQ'] = 'ERROR! Ada masalah dengan query';

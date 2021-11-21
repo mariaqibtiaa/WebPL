@@ -165,7 +165,7 @@ if (empty($_SESSION['id_user'])) {
 
                                 <!-- Row in form START -->
                                 <div class="row">
-                                    <div class="input-field col s12">
+                                    <div class="input-field col s4">
                                         <i class="material-icons prefix md-prefix">looks_two</i>
                                         <input id="no_sm" type="text" class="validate" name="no_sm" required>
                                         <?php
@@ -182,7 +182,7 @@ if (empty($_SESSION['id_user'])) {
                                         ?>
                                         <label for="no_sm">Nomor Surat</label>
                                     </div>
-                                    <div class="input-field col s12">
+                                    <div class="input-field col s4">
                                         <i class="material-icons prefix md-prefix">date_range</i>
                                         <input id="tgl_surat" type="text" name="tgl_surat" class="datepicker" required>
                                         <?php
@@ -194,7 +194,7 @@ if (empty($_SESSION['id_user'])) {
                                         ?>
                                         <label for="tgl_surat">Tanggal Surat</label>
                                     </div>
-                                    <div class="input-field col s12">
+                                    <div class="input-field col s4">
                                         <i class="material-icons prefix md-prefix">storage</i>
                                         <input id="perihal_sm" type="text" class="validate" name="perihal_sm" required>
                                         <?php
@@ -206,7 +206,7 @@ if (empty($_SESSION['id_user'])) {
                                         ?>
                                         <label for="perihal_sm">perihal surat</label>
                                     </div>
-                                    <div class="input-field col s12">
+                                    <div class="input-field col s4">
                                         <i class="material-icons prefix md-prefix">place</i>
                                         <input id="asal_sm" type="text" class="validate" name="asal_sm" required>
                                         <?php
@@ -218,7 +218,7 @@ if (empty($_SESSION['id_user'])) {
                                         ?>
                                         <label for="asal_sm">Asal Surat</label>
                                     </div>
-                                    <div class="input-field col s12">
+                                    <div class="input-field col s4">
                                         <i class="material-icons prefix md-prefix">description</i>
                                         <textarea id="isi_sm" class="materialize-textarea validate" name="isi_sm" required></textarea>
                                         <?php
@@ -230,7 +230,7 @@ if (empty($_SESSION['id_user'])) {
                                         ?>
                                         <label for="isi_sm">Isi Ringkas</label>
                                     </div>
-                                    <div class="input-field col s12">
+                                    <div class="input-field col s4">
                                         <div class="file-field input-field tooltipped" data-position="top" data-tooltip="Jika tidak ada file/scan gambar surat, biarkan kosong">
                                             <div class="btn red darken-1">
                                                 <span>File</span>
@@ -257,21 +257,61 @@ if (empty($_SESSION['id_user'])) {
                                 </div>
                                 <!-- Row in form END -->
 
-                                <div class="row">
-                                    <div class="col 6">
-                                        <button type="submit" name="submit" class="btn-large blue waves-effect waves-light">SIMPAN <i class="material-icons">done</i></button>
-                                    </div>
-                                    <div class="col 6">
-                                        <a href="?page=tsm" class="btn-large deep-orange waves-effect waves-light">BATAL <i class="material-icons">clear</i></a>
-                                    </div>
+                                <div class="col m7">
+                                    <ul class="left">
+                                        <h4 class="header">Tambah Data Disposisi</h4>
+                                    </ul>
                                 </div>
-                                <br />
-                            </form>
-                            <!-- Form END -->
+                                <!-- Row form Start -->
+                                <div class="row jarak-form">
 
+                                    <!-- Form START -->
+                                    <form class="col s12" method="POST" action="?page=tsm&act=add" enctype="multipart/form-data">
+
+                                        <!-- Row in form START -->
+                                        <div class="row">
+                                            <div class="input-field col s6">
+                                                <i class="material-icons prefix md-prefix">date_range</i>
+                                                <input id="tgl_surat" type="text" name="tgl_surat" class="datepicker" required>
+                                                <?php
+                                                if (isset($_SESSION['tgl_surat'])) {
+                                                    $tgl_surat = $_SESSION['tgl_surat'];
+                                                    echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $tgl_surat . '</div>';
+                                                    unset($_SESSION['tgl_surat']);
+                                                }
+                                                ?>
+                                                <label for="tgl_surat">Nama Penerima</label>
+                                            </div>
+                                            <div class="input-field col s6">
+                                                <i class="material-icons prefix md-prefix">date_range</i>
+                                                <input id="tgl_surat" type="text" name="tgl_surat" class="datepicker" required>
+                                                <?php
+                                                if (isset($_SESSION['tgl_surat'])) {
+                                                    $tgl_surat = $_SESSION['tgl_surat'];
+                                                    echo '<div id="alert-message" class="callout bottom z-depth-1 red lighten-4 red-text">' . $tgl_surat . '</div>';
+                                                    unset($_SESSION['tgl_surat']);
+                                                }
+                                                ?>
+                                                <label for="tgl_surat">Tanggal Diterima</label>
+                                            </div>
+                                        </div>
+                                        <!-- Row in form END -->
+
+                                        <div class="row">
+                                            <div class="col 6">
+                                                <button type="submit" name="submit" class="btn-large blue waves-effect waves-light">SIMPAN <i class="material-icons">done</i></button>
+                                            </div>
+                                            <div class="col 6">
+                                                <a href="?page=tsm" class="btn-large deep-orange waves-effect waves-light">BATAL <i class="material-icons">clear</i></a>
+                                            </div>
+                                        </div>
+                                        <br />
+                                    </form>
+                                    <!-- Form END -->
+
+                                </div>
+                                <!-- Row form END -->
                         </div>
-                        <!-- Row form END -->
-                    </div>
                 </section>
             </div>
         </div>

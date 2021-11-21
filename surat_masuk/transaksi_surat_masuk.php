@@ -17,6 +17,9 @@ if (empty($_SESSION['id_user'])) {
             case 'del':
                 include "hapus_surat_masuk.php";
                 break;
+            case 'disp':
+                include "disposisi.php";
+                break;
         }
     } else {
 
@@ -139,13 +142,18 @@ if (empty($_SESSION['id_user'])) {
         } else {
             echo '
                 <div class="section">
-                <div class="col m3">
+                <div class="card blue lighten-5">
+                <div class="card-content">
+                <h4 class="header">Arsip Surat Masuk</h4>
+                <div class="col m6">
                 <ul class="text-right">
-                    <h4 class="header">Surat Masuk</h4>
                     <li class="waves-effect waves-light"><a href="?page=tsm&act=add"><i class="material-icons md-24">add_circle</i> Tambah Data</a></li>
                     <li class="waves-effect waves-light"><a href="?page=asm"><i class="material-icons md-24">filter_list</i> Filter Surat Masuk</a></li>
                     <li class="waves-effect waves-light"><a href="?page=ctksm"  target="_blank"><i class="material-icons md-24">file_upload</i> Cetak Surat</a></li>
+                    
                 </ul>
+                </div>
+                <div class="col m6">
                 <ul class="text-right">
                 <form method="post" action="?page=tsm">
                     <div class="input-field round-in-box">
@@ -155,7 +163,8 @@ if (empty($_SESSION['id_user'])) {
                 </form>
                 </ul>
                 </div>
-
+                </div>
+                </div>
                     <!--DataTables example-->
                     <div id="table-datatables">
                         <div class="row">
@@ -193,7 +202,8 @@ if (empty($_SESSION['id_user'])) {
                     echo '</td>
                             <td>
                                 <a class="btn-small blue waves-effect waves-light black-text" href="?page=tsm&act=edit&id_sm=' . $row['id_sm'] . '"> EDIT</a>
-                                <a class="btn-small deep-orange waves-effect waves-light black-text" href="?page=tsm&act=del&id_sm=' . $row['id_sm'] . '"> DELETE</a>
+                                <a class="btn-small #d50000 red accent-4 waves-effect waves-light black-text" href="?page=tsm&act=del&id_sm=' . $row['id_sm'] . '"> DELETE</a>
+                                <a class="btn-small light-green waves-effect waves-light black-text" href="?page=tsm&act=disp&id_sm=' . $row['id_sm'] . '"> DISPOSISI</a>
                             </td>
                         </tr>
                     </tbody>';

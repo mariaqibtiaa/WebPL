@@ -118,6 +118,11 @@ if (empty($_SESSION['id_user'])) {
             unset($_SESSION['errEmpty']);
         }
         ?>
+        <div class="col m7">
+            <ul class="left">
+                <h4 class="header">Tambah Data Surat Keterangan Aktif</h4>
+            </ul>
+        </div>
         <!-- Row form Start -->
         <div class="row jarak-form">
 

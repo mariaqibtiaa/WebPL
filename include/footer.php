@@ -49,7 +49,7 @@
     $('#tgl_surat, #tgl_masuk, #tgl_buat, #batas_waktu,#dari_tanggal,#sampai_tanggal').pickadate({
         selectMonths: true,
         selectYears: 10,
-        format: "yyyy-mm-dd"
+        format: "dd-mm-yyyy"
     });
     $("#alert-message").alert().delay(3000).slideUp('slow');
 </script>

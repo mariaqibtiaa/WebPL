@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 21 Nov 2021 pada 14.05
--- Versi server: 10.4.14-MariaDB
--- Versi PHP: 7.4.10
+-- Waktu pembuatan: 21 Nov 2021 pada 14.37
+-- Versi server: 10.4.17-MariaDB
+-- Versi PHP: 8.0.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -31,9 +31,16 @@ CREATE TABLE `tbl_disposisi` (
   `id_disposisi` int(10) NOT NULL,
   `tgl_diterima` date NOT NULL,
   `nama_penerima` varchar(250) NOT NULL,
-  `sifat` varchar(100) NOT NULL,
-  `id_sm` int(10) NOT NULL
+  `sifat` varchar(30) NOT NULL,
+  `id_sm` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tbl_disposisi`
+--
+
+INSERT INTO `tbl_disposisi` (`id_disposisi`, `tgl_diterima`, `nama_penerima`, `sifat`, `id_sm`) VALUES
+(0, '2021-11-21', 'Siapa aja', 'Penting', '27');
 
 -- --------------------------------------------------------
 
@@ -165,7 +172,7 @@ CREATE TABLE `tbl_user` (
 --
 
 INSERT INTO `tbl_user` (`id_user`, `username`, `password`) VALUES
-(1, 'admin', '21232f297a57a5a743894a0e4a801fc3');
+(1, 'admin', 'c4ca4238a0b923820dcc509a6f75849b');
 
 --
 -- Indexes for dumped tables
@@ -175,8 +182,7 @@ INSERT INTO `tbl_user` (`id_user`, `username`, `password`) VALUES
 -- Indeks untuk tabel `tbl_disposisi`
 --
 ALTER TABLE `tbl_disposisi`
-  ADD PRIMARY KEY (`id_disposisi`),
-  ADD KEY `id_sm` (`id_sm`);
+  ADD PRIMARY KEY (`id_disposisi`);
 
 --
 -- Indeks untuk tabel `tbl_instansi`
@@ -235,16 +241,6 @@ ALTER TABLE `tbl_surat_masuk`
 --
 ALTER TABLE `tbl_user`
   MODIFY `id_user` tinyint(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
---
-
---
--- Ketidakleluasaan untuk tabel `tbl_disposisi`
---
-ALTER TABLE `tbl_disposisi`
-  ADD CONSTRAINT `id_sm` FOREIGN KEY (`id_sm`) REFERENCES `tbl_surat_masuk` (`id_sm`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
